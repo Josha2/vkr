@@ -20,7 +20,6 @@ export default class EmployeeList extends React.Component {
                 loading: false
             });
         });
-
     };
     
     renderItems(arr) {
