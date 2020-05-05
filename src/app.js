@@ -1,11 +1,11 @@
 import React from 'react';
+
 import HistoryTable from './employee-history/employee-history';
 import EmployeeList from './employee-list/employee-list';
 import EmployeeTable from './employee-table/employee-table';
 import './app.css'
+
 export default class App extends React.Component {
-
-
     render(){
         return (
             <main className="app">
@@ -52,6 +52,4 @@ export default class App extends React.Component {
             </main>
         )
     }
-
-
 }

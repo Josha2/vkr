@@ -1,13 +1,10 @@
 import React from 'react';
-import EmployeeApi from '../service/employeesApi';
+import ApiService from '../service/ApiService';
 import dateFormat from 'dateformat';
 import './employee-history.css';
 
 
 export default class HistoryTable extends React.Component {
-
-    history = new EmployeeApi();
-
     state = {
         history: []
     }
@@ -17,7 +14,7 @@ export default class HistoryTable extends React.Component {
     }
 
     updateHisory = () => {
-        this.history.getHistory()
+        ApiService.getHistory()
             .then((history) => {
                 this.setState(() => {
                     return {

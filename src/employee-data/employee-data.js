@@ -1,14 +1,11 @@
 import React, { useReducer } from 'react';
 import CreateDocument from '../print-document/print-document';
-import ApiService from '../service/employeesApi';
+import ApiService from '../service/ApiService';
 import img from './icon.png';
 import './employee-data.css';
 
 
 export default class Employee extends React.Component {
-
-    apiService = new ApiService();
-
     state = {
         disciplines: [],
         disciplineInfo: {},
@@ -30,7 +27,7 @@ export default class Employee extends React.Component {
     
     updateDisciplines() {
         let { employee_name } = this.props.selectedEmployee;
-        this.apiService
+        ApiService
             .getDiscipline(employee_name)
             .then((disciplines) => {
                 this.setState({ disciplines });
@@ -38,7 +35,7 @@ export default class Employee extends React.Component {
     };
 
     updateDisciplineInfo(id_e, id_d) {
-        this.apiService.getDisciplineInfo(id_e, id_d)
+        ApiService.getDisciplineInfo(id_e, id_d)
             .then((disciplineInfo) => {
                 this.setState({
                     disciplineInfo
@@ -122,7 +119,7 @@ export default class Employee extends React.Component {
 
         const disciplineList = disciplines.map((element, i) => {
             return (
-                <div className="discipline-card" 
+                <div key={i} className="discipline-card" 
                      onClick={() => this.updateDisciplineInfo(employee_id, element.discipline_id)}>
                     <img src={img} alt="" height="28" width="28"/>
                     <p>{ element.discipline_name}</p>

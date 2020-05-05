@@ -1,28 +1,22 @@
-import React from 'react';
-import ApiService from '../service/employeesApi';
-import Employee from '../employee-data/employee-data';
-import './employee-list.css';
-export default class EmployeeList extends React.Component {
-    
-    apiService = new ApiService();
-    
-    state = {
-        employees: [],
-        selectedEmployee: {},
-        loading: true,
-    };
+import React, { useState, useEffect, useCallback } from 'react';
 
-    componentDidMount() {
-        this.apiService.getEmployees()
-        .then((employees) =>{
-            this.setState({
-                employees,
-                loading: false
-            });
+import EmployeeService from '../service/ApiService';
+import Employee from '../employee-data/employee-data';
+
+
+function EmployeeList() {
+    const [employees, setEmployees] = useState([]);
+    const [selectedEmployee, setSelectedEmployee] = useState({});
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        EmployeeService.getEmployees().then((data) => {
+            setEmployees(data);
+            setLoading(false);
         });
-    };
-    
-    renderItems(arr) {
+    }, [EmployeeService, setEmployees, setLoading])
+  
+    const renderItems = useCallback((arr) => {
         return arr.map((item) => {
             return (
                 <option key={item.employee_id}>
@@ -30,35 +24,33 @@ export default class EmployeeList extends React.Component {
                 </option>
             );
         });
-    };
+    }, []);
 
-    selectEmployee = (e) => {
-        this.apiService
-            .getEmployee(e.target.value)
-            .then((selectedEmployee) => {
-                this.setState({ selectedEmployee });
+    const selectEmployee = useCallback((e) => {
+        EmployeeService.getEmployee(e.target.value).then(
+            (selectedEmployee) => {
+                setSelectedEmployee(selectedEmployee);
             });
-        };
+    }, []);
 
-    render() {
-        if(this.state.loading) {
-            return <div>Loading...</div>
-        }
+    if(loading) {
+        return <div>Loading...</div>
+    }
+    
+    let employeeInfo = 
+        Object.keys(selectedEmployee).length === 0 
+        ? <p>Выберете сотрудника!</p> 
+        : <Employee selectedEmployee={selectedEmployee}/>
 
-        let employeeInfo = Object.keys(this.state.selectedEmployee).length === 0 ?
-                           <p>Выберете сотрудника!</p> :
-                           <Employee selectedEmployee={this.state.selectedEmployee}/>  
-
-        const employeesList = this.renderItems(this.state.employees);
+        const employeesList = renderItems(employees);
         return (
             <div className="container-list">
-                <select className="custom-select"
-                onClick={this.selectEmployee}>
-                    { employeesList }
+                <select className="custom-select" onClick={selectEmployee}>
+                    {employeesList}
                 </select> 
                 {employeeInfo}
             </div>
         )
+}
 
-    };
-};
+export default EmployeeList;

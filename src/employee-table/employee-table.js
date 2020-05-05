@@ -1,20 +1,18 @@
 import React from 'react';
 
-import ApiService from '../service/employeesApi';
+import ApiService from '../service/ApiService';
 import dateFormat from 'dateformat';
 import Tabs from '../tabs/tabs';
 import edit from './edit.png';
 import './employee-table.css';
 
 export default class EmployeeTable extends React.Component {
-    apiService = new ApiService();
-
     state = {
         employees: [],
     }
 
     componentDidMount() {
-        this.apiService.getEmployees()
+        ApiService.getEmployees()
         .then((employees) =>{
             this.setState({
                 employees,
