@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css?family=Istok+Web:400,400i,700&display=swap&subset=cyrillic');
+
+/*///////////////////////////////////////////////////////////////
+[ Table ]*/
+.table-main-employee {
+    margin: 0 auto;
+    width: 100%;
+    font-family: 'Istok Web';
+    overflow: auto;
+}
+
+.table-employee {
+    border-collapse: collapse;
+    border: 1px solid #d4d4d4;
+    margin: 0 auto;
+    background: white;
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+    text-align: center;
+
+}
+
+.column1-employee {
+    width: 8%;
+}
+
+.column2-employee {
+    width: 15%;
+}
+
+.column3-employee {
+    width: 15%;
+}
+
+.column6-employee {
+    width: 15%;
+}
+
+.table-employee th{
+    background: rgb(79, 157, 221);
+    text-shadow: 0 1px 0 #38678f;
+    color: white;
+    border: 1px solid #5694ca;
+    box-shadow: inset 0px 1px 2px #568ebd;
+    height: 34px;
+    font-weight: lighter;
+    transition: all 0.2s;
+    padding-left: 10px;
+    padding-right: 10px;
+
+}
+
+.table-employee td{
+    height: 90px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border: 1px solid #d4d4d4;
+    color:black;
+    background: #ffffff;
+    
+}
+
+.table-employee tr{
+    border: 1px solid #d4d4d4;
+    
+}
+
+.table-employee td:hover {
+    background-color: #f7f7f7;
+}
+  
+
+.table-body-employee::-webkit-scrollbar {
+    width: 15px;
+}
+
+.table-body-employee::-webkit-scrollbar-track {
+    background: #dddddd;
+}
+
+.table-body-employee::-webkit-scrollbar-thumb {
+    background: #7b4ef7;
+    border-radius: 10px;
+}
