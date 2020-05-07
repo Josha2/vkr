@@ -10,11 +10,13 @@ function EmployeeList() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        EmployeeService.getEmployees().then((data) => {
-            setEmployees(data);
-            setLoading(false);
-        });
-    }, [EmployeeService, setEmployees, setLoading])
+        EmployeeService
+            .getEmployees()
+            .then((data) => {
+                setEmployees(data);
+                setLoading(false);
+            });
+    }, [setEmployees, setLoading]);
   
     const renderItems = useCallback((arr) => {
         return arr.map((item) => {
@@ -27,10 +29,9 @@ function EmployeeList() {
     }, []);
 
     const selectEmployee = useCallback((e) => {
-        EmployeeService.getEmployee(e.target.value).then(
-            (selectedEmployee) => {
-                setSelectedEmployee(selectedEmployee);
-            });
+        EmployeeService
+            .getEmployee(e.target.value)
+            .then((selectedEmployee) => setSelectedEmployee(selectedEmployee));
     }, []);
 
     if(loading) {
@@ -50,7 +51,7 @@ function EmployeeList() {
                 </select> 
                 {employeeInfo}
             </div>
-        )
-}
+        );
+};
 
 export default EmployeeList;

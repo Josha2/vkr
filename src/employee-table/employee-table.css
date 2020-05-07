@@ -5,7 +5,6 @@
 .table-main-employee {
     margin: 0 auto;
     width: 100%;
-    font-family: 'Istok Web';
     overflow: auto;
 }
 
@@ -44,7 +43,6 @@
     border: 1px solid #5694ca;
     box-shadow: inset 0px 1px 2px #568ebd;
     height: 34px;
-    font-weight: lighter;
     transition: all 0.2s;
     padding-left: 10px;
     padding-right: 10px;

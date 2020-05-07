@@ -1,53 +1,35 @@
-import React, { useReducer } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+
 import CreateDocument from '../print-document/print-document';
-import ApiService from '../service/ApiService';
+import EmployeeService from '../service/ApiService';
 import img from './icon.png';
+
 import './employee-data.css';
 
+function Employee({ employee_id, employee_name, employee_skill }) {
+    const [disciplines, setDisciplines] = useState([]);
+    const [disciplineInfo, setDisciplineInfo] = useState({});
+    const [disciplineHours, setDisciplineHours] = useState([]);
+    const [print, readyToPrint] = useState(true);
 
-export default class Employee extends React.Component {
-    state = {
-        disciplines: [],
-        disciplineInfo: {},
-        disciplineHours: [],
-        readyToPrint: false
-    };
-    
-
-    componentDidUpdate(prevProps) {
-        if (this.props.selectedEmployee !== prevProps.selectedEmployee) {
-            this.updateDisciplines();
-            this.setState({
-                disciplines: [],
-                disciplineInfo: {},
-                disciplineHours: []
-            })
-        };
-    };
-    
-    updateDisciplines() {
-        let { employee_name } = this.props.selectedEmployee;
-        ApiService
+    useEffect(() => {
+        EmployeeService
             .getDiscipline(employee_name)
-            .then((disciplines) => {
-                this.setState({ disciplines });
-            });
-    };
-
-    updateDisciplineInfo(id_e, id_d) {
-        ApiService.getDisciplineInfo(id_e, id_d)
+            .then(() => setDisciplines(disciplines));
+    }, [employee_name, disciplines]);
+    
+    //---Выводим информацию по определенной дисцеплине у выбранного работника---
+    const updateDisciplineInfo = useCallback((id_e, id_d) => {
+        EmployeeService
+            .getDisciplineInfo(id_e, id_d)
             .then((disciplineInfo) => {
-                this.setState({
-                    disciplineInfo
-                });
+                setDisciplineInfo(disciplineInfo)
                 return disciplineInfo
             })
-            .then((disciplineInfo) => {
-                this.insertDisciplineInfo(disciplineInfo);
-            })
-    };
+            .then((disciplineInfo) => insertDisciplineInfo(disciplineInfo));
+    }, [employee_name, setDisciplineInfo]);
 
-    editLabel(label) {
+    function editLabel(label){
         switch (label) {
             case 'lectures':
                 label = 'Лекции';
@@ -76,27 +58,41 @@ export default class Employee extends React.Component {
         return label;
     };
 
-    insertDisciplineInfo = (obj) => {
+    //---Создаем массив из объекта информация о дисциплине
+    const insertDisciplineInfo = useCallback((obj) => {
         let newArray = [];
         for (let prop in obj) {
-           newArray.push({hours: obj[prop], label: this.editLabel(prop)})
+            newArray.push({hours: obj[prop], label: editLabel(prop)})
         }
-        this.setState(() => {
-            return {
-                disciplineHours: newArray
-            }
-        })
-    };
+        setDisciplineHours(newArray);
+    }, [disciplineInfo]);
 
-    handleCheck = (e) => {
-        this.setState({ readyToPrint: e.target.checked })
-    }
+    const disciplineList = disciplines.map((element, i) => {
+        return (
+            <div key={i} 
+                className="discipline-card" 
+                onClick={updateDisciplineInfo(employee_id, element.discipline_id)}>
+                <img src={img} alt="" height="28" width="28"/>
+                <p>{ element.discipline_name}</p>
+            </div>
+        );
+    });
 
-    render(){
-        const { disciplines, disciplineHours } = this.state;
-        const { employee_id, employee_name, employee_skill } = this.props.selectedEmployee;
-        let arrayHours = [];
-        let multiplier = 0;
+    const disciplineListInFo = disciplineHours.map((element, i) => {
+        return (
+            <li className="list-group-item" key={i}>
+                { element.label } : {element.hours}
+            </li>
+        );
+    });
+
+    const handleCheck = useCallback((e) => {
+        readyToPrint(e.target.checked);
+    }, []);
+
+    //---Расчёт стоимости для документа
+    let arrayHours = [];
+    let multiplier = 0;
         switch (employee_skill) {
             case 'ассистент':
                 multiplier = 180;
@@ -113,57 +109,37 @@ export default class Employee extends React.Component {
             default:
                 break;
         };
-        disciplineHours.map((element, i) => {
+        disciplineHours.map((element) => {
             arrayHours.push(element.hours);
         })
 
-        const disciplineList = disciplines.map((element, i) => {
-            return (
-                <div key={i} className="discipline-card" 
-                     onClick={() => this.updateDisciplineInfo(employee_id, element.discipline_id)}>
-                    <img src={img} alt="" height="28" width="28"/>
-                    <p>{ element.discipline_name}</p>
-                </div>
-            );
-        });
+    let selectDisc = disciplineHours.length === 0 
+                    ? null 
+                    : disciplineListInFo
 
-        const disciplineType = disciplineHours.map((element, i) => {
-            return (
-                <li className="list-group-item" key={i}>
-                    { element.label } : {element.hours}
-                </li>
-            );
-        });
+    const printDoc = print === false 
+                    ? null 
+                    : <CreateDocument name={employee_name}
+                        position={employee_skill}
+                        lecturesValue={multiplier}
+                        lecturesHours={arrayHours[0]}
+                        seminarValue={multiplier}
+                        seminarHours={arrayHours[1]}/>  
 
-        let selectDisc = disciplineHours.length === 0 ?
-                           null :
-                           disciplineType
-
-
-        const printDoc = this.state.readyToPrint === false ?
-                           null :
-                           <CreateDocument name={employee_name}
-                            position={employee_skill}
-                            lecturesValue={multiplier}
-                            lecturesHours={arrayHours[0]}
-                            seminarValue={multiplier}
-                            seminarHours={arrayHours[1]}/>  
-
-
-        return (
-            <>
+    return (
+        <>
             <div className="container">
-                { disciplineList }
+                {disciplineList}
             </div>
             <ul className="comma-list">
                 { selectDisc }
             </ul>
-            <input type="checkbox" checked={this.state.readyToPrint}
-                   onChange={this.handleCheck}> 
+            <input type="checkbox" checked={print}
+                   onChange={handleCheck}> 
             </input>
             {printDoc}
-            </>
-        );
-    };
+        </>
+    )
 };
 
+export default Employee;

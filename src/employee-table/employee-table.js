@@ -2,6 +2,7 @@ import React from 'react';
 
 import ApiService from '../service/ApiService';
 import dateFormat from 'dateformat';
+import addEmployee from '../form-add-employee/form-add-employee';
 import Tabs from '../tabs/tabs';
 import edit from './edit.png';
 import './employee-table.css';
@@ -21,7 +22,7 @@ export default class EmployeeTable extends React.Component {
         });
 
     };
-
+    
     render(){
         let { employees } = this.state;
         const employeesRows = employees.map((element, i) => {
@@ -40,7 +41,7 @@ export default class EmployeeTable extends React.Component {
 
         return (
             <Tabs>
-                <div className="table-main-employee" label="Список">
+                <div className="table-main-employee" label="Список" total={` (${this.state.employees.length})`}>
                     <table className="table-employee">
                             <thead>
                                 <tr> 
@@ -60,7 +61,7 @@ export default class EmployeeTable extends React.Component {
                 </div>
 
                 <div label="Добавить">
-                    <p>COCK COCK COCK COCK COCK COCK COCK COCK COCK COCK COCK COCK </p>
+                    <addEmployee/>
                 </div>
             </Tabs>
         )

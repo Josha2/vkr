@@ -5,6 +5,7 @@ export default class Tab extends Component {
   static propTypes = {
     activeTab: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
+    total: PropTypes.string,
     onClick: PropTypes.func.isRequired,
   };
 
@@ -19,6 +20,7 @@ export default class Tab extends Component {
       props: {
         activeTab,
         label,
+        total
       },
     } = this;
 
@@ -34,6 +36,7 @@ export default class Tab extends Component {
         onClick={onClick}
       >
         {label}
+        {total}
       </li>
     );
   }
