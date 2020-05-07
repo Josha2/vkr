@@ -2,7 +2,7 @@ import React from 'react';
 
 import ApiService from '../service/ApiService';
 import dateFormat from 'dateformat';
-import addEmployee from '../form-add-employee/form-add-employee';
+import AddEmployee from '../form-add-employee/form-add-employee';
 import Tabs from '../tabs/tabs';
 import edit from './edit.png';
 import './employee-table.css';
@@ -61,7 +61,7 @@ export default class EmployeeTable extends React.Component {
                 </div>
 
                 <div label="Добавить">
-                    <addEmployee/>
+                    <AddEmployee/>
                 </div>
             </Tabs>
         )
