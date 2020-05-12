@@ -1,16 +1,2 @@
-@import url('https://fonts.googleapis.com/css?family=Istok+Web:400,400i,700&display=swap&subset=cyrillic');
 
-.container-list {
-    width: 800px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.container-list p{
-    font-family: 'Istok Web';
-    font-weight: 600;
-    font-size: 18px;
-    color: #7b4ef7;
-    padding: 10px;
-}
 

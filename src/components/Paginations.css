@@ -1,0 +1,9 @@
+.pagination > .page-item.active > a {
+    background-color: #4F9DDD;
+    color: #ffffff;
+    border-color: #4F9DDD
+}
+
+.pagination > .page-item > a {
+    color: #4F9DDD;
+}

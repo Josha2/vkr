@@ -24,19 +24,26 @@ export default class Tab extends Component {
       },
     } = this;
 
-    let className = 'tab-list-item';
+    let classNameLi = 'nav-item';
+    let className = 'nav-link';
+    let style = {'color': '#4F9DDD'};
 
     if (activeTab === label) {
-      className += ' tab-list-active';
+      className += ' nav-link active';
     }
 
     return (
       <li
-        className={className}
+        className={classNameLi}
         onClick={onClick}
       >
-        {label}
-        {total}
+      <a 
+        className={className} 
+        style={style}
+        href="/#">
+          {label}
+          {total}
+      </a>
       </li>
     );
   }

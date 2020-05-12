@@ -2,21 +2,21 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 import EmployeeService from '../service/ApiService';
 import Employee from '../employee-data/employee-data';
+import {Card1, Card2} from '../components/Card';
 
 
 function EmployeeList() {
     const [employees, setEmployees] = useState([]);
     const [selectedEmployee, setSelectedEmployee] = useState({});
-    const [loading, setLoading] = useState(true);
+    const [page, setPage] = useState('Main');
 
     useEffect(() => {
         EmployeeService
             .getEmployees()
             .then((data) => {
                 setEmployees(data);
-                setLoading(false);
             });
-    }, [setEmployees, setLoading]);
+    }, [setEmployees]);
   
     const renderItems = useCallback((arr) => {
         return arr.map((item) => {
@@ -32,26 +32,57 @@ function EmployeeList() {
         EmployeeService
             .getEmployee(e.target.value)
             .then((selectedEmployee) => setSelectedEmployee(selectedEmployee));
-    }, []);
+    }, [setSelectedEmployee]);
 
-    if(loading) {
-        return <div>Loading...</div>
-    }
-    
-    let employeeInfo = 
-        Object.keys(selectedEmployee).length === 0 
-        ? <p>Выберете сотрудника!</p> 
-        : <Employee selectedEmployee={selectedEmployee}/>
+    const employeesList = renderItems(employees);
 
-        const employeesList = renderItems(employees);
+    const showAll = () => {
         return (
-            <div className="container-list">
-                <select className="custom-select" onClick={selectEmployee}>
-                    {employeesList}
-                </select> 
-                {employeeInfo}
+            <div class="row">
+                <Card1 show={() => setPage('Card1')}/>
+                <Card2/>
             </div>
         );
+    };
+
+    const showEmployeeList = () => {
+        return (
+            <div className="form-group">
+                <label 
+                    htmlFor="employee" 
+                    className="col-3 col-form-label">
+                        Сотрудник:
+                </label>
+                <select 
+                    className="custom-select" 
+                    onClick={selectEmployee}
+                    id="employee">
+                {employeesList}
+            </select> 
+          </div>
+        );
+    };
+
+    let mainpage = null;
+
+    switch (page) {
+        case 'Main':
+            mainpage = showAll();
+            break;
+        case 'Card1':
+            mainpage = showEmployeeList();
+        default:
+            break;
+    };
+    
+    const employeeInfo = Object.keys(selectedEmployee).length === 0 ? null : <Employee selectedEmployee={selectedEmployee}/>
+
+    return (
+        <div className="container pt-2">
+            {mainpage}
+            {employeeInfo}
+        </div>
+    );
 };
 
 export default EmployeeList;

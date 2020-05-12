@@ -34,7 +34,7 @@ export default class Tabs extends Component {
 
     return (
       <div className="tabs">
-        <ol className="tab-list">
+        <ol className="nav nav-tabs">
           {children.map((child) => {
             const { label, total } = child.props;
 

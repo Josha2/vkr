@@ -1,36 +1,20 @@
-.container {
-    padding: 5px;
-}
-
-.discipline-card {
-    width: 235px;
-    height: 45px;
-    background-color: #f5f5f5;
-    font-family: 'Istok Web';
-    font-size: 15px;
-    color: #808080;
-    line-height: 1.2;
-    font-weight: 600;
-    padding: 8px 0 5px 5px;
-    margin: 10px 10px 0 0;
-    display: inline-block;
-    border-radius: 10px;
-}
-
-.discipline-card:hover {
-    color: #555555;
-    background-color: #e4e4e4;
-}
-
-.discipline-card img {
-    float: left;
-}
-
-.discipline-card p {
-    padding-top: 5px;
+.card.bg-light {
     cursor: pointer;
+    max-width: 16rem;
 }
 
-.comma-list {
-    padding: 10px 10px 10px 0;
+.card.bg-light .card-header{
+    padding: 0.35rem 0.55rem;
 }
+
+.card.bg-light .card-body {
+    padding: 0.65rem;
+}
+
+.card-body > h5 {
+    color: #4F9DDD;
+    margin-bottom: 0.05rem;
+}
+
+
+

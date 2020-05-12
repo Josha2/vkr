@@ -18,12 +18,12 @@ const AddEmployee = () => {
 
     return (
         <form onSubmit={submitHandler}>
-            <div className="form-group">
+            <div className="form-group pt-2">
                 <div className="form-group row">
                     <label 
                         htmlFor="name" 
                         className="col-3 col-form-label">
-                            ФИО работника:
+                            ФИО сотрудника:
                         </label>
                     <input 
                         type="text" 

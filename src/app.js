@@ -7,7 +7,7 @@ import AlertState from './context/alert/AlertState';
 import NavBar from './components/Navbar';
 import Alert from './components/Alert';
 
-import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import './app.css'
 

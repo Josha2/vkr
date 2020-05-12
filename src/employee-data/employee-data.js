@@ -6,7 +6,10 @@ import img from './icon.png';
 
 import './employee-data.css';
 
-function Employee({ employee_id, employee_name, employee_skill }) {
+function Employee(props) {
+    const {selectedEmployee} = props;
+    const {employee_id, employee_name, employee_skill} = selectedEmployee;
+
     const [disciplines, setDisciplines] = useState([]);
     const [disciplineInfo, setDisciplineInfo] = useState({});
     const [disciplineHours, setDisciplineHours] = useState([]);
@@ -15,19 +18,32 @@ function Employee({ employee_id, employee_name, employee_skill }) {
     useEffect(() => {
         EmployeeService
             .getDiscipline(employee_name)
-            .then(() => setDisciplines(disciplines));
-    }, [employee_name, disciplines]);
-    
+            .then((data) => {
+                setDisciplines(data);
+            });
+
+    }, [employee_name]);
+
+    //---Создаем массив из объекта информация о дисциплине
+    const insertDisciplineInfo = useCallback((obj) => {
+        let newArray = [];
+        for (let prop in obj) {
+            newArray.push({hours: obj[prop], label: editLabel(prop)})
+        }
+        setDisciplineHours(newArray);
+    }, [setDisciplineHours]);
+
     //---Выводим информацию по определенной дисцеплине у выбранного работника---
     const updateDisciplineInfo = useCallback((id_e, id_d) => {
-        EmployeeService
-            .getDisciplineInfo(id_e, id_d)
-            .then((disciplineInfo) => {
-                setDisciplineInfo(disciplineInfo)
-                return disciplineInfo
-            })
-            .then((disciplineInfo) => insertDisciplineInfo(disciplineInfo));
-    }, [employee_name, setDisciplineInfo]);
+        console.log(1);
+        // EmployeeService
+        //     .getDisciplineInfo(id_e, id_d)
+        //     .then((disciplineInfo) => {
+        //         setDisciplineInfo(disciplineInfo)
+        //         return disciplineInfo
+        //     })
+        //     .then((disciplineInfo) => insertDisciplineInfo(disciplineInfo));
+    }, []);
 
     function editLabel(label){
         switch (label) {
@@ -58,20 +74,11 @@ function Employee({ employee_id, employee_name, employee_skill }) {
         return label;
     };
 
-    //---Создаем массив из объекта информация о дисциплине
-    const insertDisciplineInfo = useCallback((obj) => {
-        let newArray = [];
-        for (let prop in obj) {
-            newArray.push({hours: obj[prop], label: editLabel(prop)})
-        }
-        setDisciplineHours(newArray);
-    }, [disciplineInfo]);
-
     const disciplineList = disciplines.map((element, i) => {
         return (
             <div key={i} 
                 className="discipline-card" 
-                onClick={updateDisciplineInfo(employee_id, element.discipline_id)}>
+                onClick={() => updateDisciplineInfo(employee_id, element.discipline_id)}>
                 <img src={img} alt="" height="28" width="28"/>
                 <p>{ element.discipline_name}</p>
             </div>
@@ -88,7 +95,7 @@ function Employee({ employee_id, employee_name, employee_skill }) {
 
     const handleCheck = useCallback((e) => {
         readyToPrint(e.target.checked);
-    }, []);
+    }, [readyToPrint]);
 
     //---Расчёт стоимости для документа
     let arrayHours = [];
@@ -110,7 +117,7 @@ function Employee({ employee_id, employee_name, employee_skill }) {
                 break;
         };
         disciplineHours.map((element) => {
-            arrayHours.push(element.hours);
+            return arrayHours.push(element.hours);
         })
 
     let selectDisc = disciplineHours.length === 0 

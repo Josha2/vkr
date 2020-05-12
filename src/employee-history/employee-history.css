@@ -68,7 +68,6 @@ table {
 }
 
 .row-head th{
-    font-family: 'Istok Web';
     font-size: 18px;
     color: #fff;
     line-height: 1.2;
@@ -76,7 +75,6 @@ table {
 }
 
 tbody tr {
-    font-family: 'Istok Web';
     font-size: 15px;
     color: #808080;
     line-height: 1.2;

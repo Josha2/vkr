@@ -2,7 +2,6 @@ import React from 'react';
 
 import CreateDocument from '../print-document/print-document';
 import ApiService from '../service/ApiService';
-import img from './icon.png';
 
 import './employee-data.css';
 
@@ -121,18 +120,27 @@ export default class Employee1 extends React.Component {
 
         const disciplineList = disciplines.map((element, i) => {
             return (
-                <div key={i} className="discipline-card" 
-                     onClick={() => this.updateDisciplineInfo(employee_id, element.discipline_id)}>
-                    <img src={img} alt="" height="28" width="28"/>
-                    <p>{ element.discipline_name}</p>
-                </div>
+                    <div className="card bg-light mb-2"
+                        key={i}
+                        onClick={() => this.updateDisciplineInfo(employee_id, element.discipline_id)}>
+                        <div className="card-header">
+                            Дисциплина
+                        </div>
+                        <div className="card-body text-primary">
+                            <h5 className="card-title">
+                                { element.discipline_name}
+                            </h5>
+                        </div>
+                    </div>
             );
         });
 
         const disciplineType = disciplineHours.map((element, i) => {
             return (
-                <li className="list-group-item" key={i}>
-                    { element.label } : {element.hours}
+                <li className="list-group-item d-flex justify-content-between align-items-center" 
+                    key={i}>
+                    { element.label } 
+                    <span class="badge badge-primary badge-pill">{element.hours}</span>
                 </li>
             );
         });
@@ -144,26 +152,33 @@ export default class Employee1 extends React.Component {
 
         const printDoc = this.state.readyToPrint === false ?
                            null :
-                           <CreateDocument name={employee_name}
-                            position={employee_skill}
-                            lecturesValue={multiplier}
-                            lecturesHours={arrayHours[0]}
-                            seminarValue={multiplier}
-                            seminarHours={arrayHours[1]}/>  
+                           <CreateDocument 
+                                name={employee_name}
+                                position={employee_skill}
+                                lecturesValue={multiplier}
+                                lecturesHours={arrayHours[0]}
+                                seminarValue={multiplier}
+                                seminarHours={arrayHours[1]}/>  
 
 
         return (
             <>
-            <div className="container">
-                { disciplineList }
-            </div>
-            <ul className="comma-list">
-                { selectDisc }
-            </ul>
-            <input type="checkbox" checked={this.state.readyToPrint}
-                   onChange={this.handleCheck}> 
-            </input>
-            {printDoc}
+                <div className="card-deck pt-2">
+                    { disciplineList }
+                </div>
+                    <ul className="list-group" style={{'maxWidth' : '550px'}}>
+                        <label 
+                            className="col-3 col-form-label">
+                                Часы:
+                        </label>
+                        { selectDisc }
+                    </ul>
+                <input type="checkbox" 
+                        className="form-check-input"
+                        checked={this.state.readyToPrint}
+                        onChange={this.handleCheck}> 
+                </input>
+                {printDoc}
             </>
         );
     };
