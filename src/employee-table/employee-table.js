@@ -1,14 +1,18 @@
 import React from 'react';
 
-import ApiService from '../service/ApiService';
 import dateFormat from 'dateformat';
-import AddEmployee from '../form-add-employee/form-add-employee';
-import Tabs from '../tabs/tabs';
 import { Pagination } from '../components/Paginations';
+import PopUp from '../components/PopUp';
+import AddEmployee from '../form-add-employee/form-add-employee';
+import ApiService from '../service/ApiService';
+import AddWorkLoad from '../components/AddWorkLoad/AddWorkLoad';
+import Tabs from '../tabs/tabs';
 
-import search from './search.png';
+
 import edit from './edit.png';
 import './employee-table.css';
+import search from './search.png';
+
 
 export default class EmployeeTable extends React.Component {
 
@@ -17,17 +21,19 @@ export default class EmployeeTable extends React.Component {
         currentPage: 1,
         employeesPerPage: 6,
         term: '',
-        loading: true
+        loading: true,
+        isOpenModal: false,
+        currentItem: null
     };
 
     componentDidMount() {
         ApiService.getEmployees()
-        .then((employees) =>{
-            this.setState({
-                employees,
-                loading: false
+            .then((employees) =>{
+                this.setState({
+                    employees,
+                    loading: false
+                });
             });
-        });
 
     };
 
@@ -65,8 +71,20 @@ export default class EmployeeTable extends React.Component {
         });
     };
 
+    showModal = (item) => {
+        this.setState({
+            currentItem: item,
+            isOpenModal: true
+        });
+
+    }
+    
+    closeModal = () => {
+        this.setState({isOpenModal: false})
+    }
+
     render(){
-        let { employees, term } = this.state;
+        let { employees, term, isOpenModal: modal } = this.state;
         const visibleEmployees = this.search(employees, term);
 
         const indexOfLastEmployee = this.state.currentPage * this.state.employeesPerPage;
@@ -74,21 +92,37 @@ export default class EmployeeTable extends React.Component {
         const currentEmployees = visibleEmployees.slice(IndexOfFirstEmployee, indexOfLastEmployee);
 
 
-        const employeesRows = currentEmployees.map((element, i) => {
+        const employeesRows = currentEmployees.map((item, i) => {
             return (
+                <>
                 <tr key={i}>
-                    <td className="column0-employee"><img src={edit} alt="" height="25" width="25"/></td>
-                    <td className="column1-employee">{element.employee_number}</td>
-                    <td className="column2-employee">{dateFormat(element.employee_start, 'dd-mm-yyyy')}</td>
-                    <td className="column3-employee">{dateFormat(element.employee_end, 'dd-mm-yyyy')}</td>
-                    <td className="column4-employee">{element.employee_name}</td>
-                    <td className="column5-employee">{element.employee_department}</td>
-                    <td className="column6-employee">{element.employee_skill}</td>
+                    <td className="column0-employee">
+                        <img 
+                            onClick={() => this.showModal(item)}
+                            src={edit} 
+                            alt="" 
+                            height="25" 
+                            width="25"/>
+                    </td>
+                    <td className="column1-employee">{item.employee_number}</td>
+                    <td className="column2-employee">{dateFormat(item.employee_start, 'dd-mm-yyyy')}</td>
+                    <td className="column3-employee">{dateFormat(item.employee_end, 'dd-mm-yyyy')}</td>
+                    <td className="column4-employee">{item.employee_name}</td>
+                    <td className="column5-employee">{item.employee_department}</td>
+                    <td className="column6-employee">{item.employee_skill}</td>
                 </tr>
+                </>
             )
         })
 
         return (
+            <>
+            <PopUp 
+                show={this.state.isOpenModal} 
+                hide={() => this.setState({ modal: false})} 
+                data={this.state.currentItem} 
+                closeModal={this.closeModal}
+            />
             <div className="container pt-2">
                 <Tabs>
                     <div className="table-main-employee" label="Список" total={` (${visibleEmployees.length})`}>
@@ -102,20 +136,21 @@ export default class EmployeeTable extends React.Component {
                                 type="text" 
                                 className="form-control" 
                                 placeholder="поиск по ФИО"
-                                style={{'width': '150px'}}/>
+                                style={{'width': '150px'}}
+                                onChange={(e) => this.setState({ term: e.target.value, currentPage: 1 })}/>
                         </div>
                         <table className="table-employee">
-                                <thead>
-                                    <tr> 
-                                        <th>Изменить</th>
-                                        <th>Договор</th>
-                                        <th>Дата начала договора</th>
-                                        <th>Дата конца договора</th>
-                                        <th>Контактное лицо</th>
-                                        <th>Факультет</th>
-                                        <th>Должность</th>
-                                    </tr>
-                                </thead>
+                            <thead>
+                                <tr> 
+                                    <th>Изменить</th>
+                                    <th>Договор</th>
+                                    <th>Дата начала договора</th>
+                                    <th>Дата конца договора</th>
+                                    <th>ФИО</th>
+                                    <th>Факультет</th>
+                                    <th>Должность</th>
+                                </tr>
+                            </thead>
                             <tbody>
                                 {employeesRows}
                             </tbody>
@@ -133,12 +168,13 @@ export default class EmployeeTable extends React.Component {
                     <div label="Добавить сотрудника">
                         <AddEmployee/>
                     </div>
-                    
+
                     <div label="Добавить объем уч.нагрузки">
-                        
+                        <AddWorkLoad/>
                     </div>
                 </Tabs>
             </div>
+            </>
         )
     }
 }

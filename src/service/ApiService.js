@@ -43,10 +43,20 @@ const getDisciplineInfo = async (id_e, id_d) => {
     return body.data[0];
 };
 
+const getDisciplines = async () => {
+    const result = await fetch('http://localhost:4000/disciplines');
+    if(!result.ok) {
+        throw new Error(`Could not fetch url, received ${result.status}`);
+    };
+    const body = await result.json();
+    return body.data;
+};
+
 export default {
     getEmployees,
     getEmployee,
     getHistory,
     getDiscipline,
-    getDisciplineInfo
+    getDisciplineInfo,
+    getDisciplines
 }

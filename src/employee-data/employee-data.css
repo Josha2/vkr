@@ -16,5 +16,9 @@
     margin-bottom: 0.05rem;
 }
 
+.list-group-item {
+    border: 1px solid red;
+}
+
 
 

@@ -67,6 +67,22 @@ app.get('/employees/discipline', (req, res) => {
     })
 })
 
+//SELECT ALL DISCIPLINES
+app.get('/disciplines', (req, res) => {
+    const SELECT_All_DISCIPLINE = `SELECT *
+                                        FROM discipline`;
+    connection.query(SELECT_All_DISCIPLINE, (err, results ) => {
+        if(err) {
+            return res.send(err);
+        }
+        else {
+            return res.json({
+                data: results
+            })
+        }
+    })
+})
+
 //
 app.get('/employees/employee', (req, res) => {
     const { employee_name, } = req.query;

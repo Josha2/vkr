@@ -1,10 +1,26 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState, memo } from 'react';
 
+import {usePrevious} from '../helpers/usePrevious';
 import CreateDocument from '../print-document/print-document';
 import EmployeeService from '../service/ApiService';
-import img from './icon.png';
-
 import './employee-data.css';
+
+const mapAcademicTypeLoadToDescription = {
+    lectures: 'Лекции',
+    seminar: 'Семинарские (практические) занятия',
+    diploma: 'Руководство дипломными (курсовыми) работами',
+    sets: 'Зачеты',
+    exams: 'Экзамены',
+    consultations: 'Консультации',
+    other: 'Другая учебная работа'
+};
+
+const mapHoursToMultiplier = {
+    'ассистент': 180,
+    'старший преподаватель': 280,
+    'доцент': 380,
+    'профессор': 480,
+}
 
 function Employee(props) {
     const {selectedEmployee} = props;
@@ -13,140 +29,108 @@ function Employee(props) {
     const [disciplines, setDisciplines] = useState([]);
     const [disciplineInfo, setDisciplineInfo] = useState({});
     const [disciplineHours, setDisciplineHours] = useState([]);
-    const [print, readyToPrint] = useState(true);
+    const [print, readyToPrint] = useState(false);
 
     useEffect(() => {
-        EmployeeService
-            .getDiscipline(employee_name)
-            .then((data) => {
-                setDisciplines(data);
-            });
+        const fetch = async () => {
+            const disciplines = await EmployeeService.getDiscipline(employee_name);
+            setDisciplines(disciplines);
+        };
 
+        fetch();
     }, [employee_name]);
+
+    const previousEmployeeName = usePrevious(employee_name);
+    useEffect(() => {
+        if(employee_name !== previousEmployeeName) {
+            readyToPrint(false);
+        }
+
+    }, [previousEmployeeName, employee_name]);
 
     //---Создаем массив из объекта информация о дисциплине
     const insertDisciplineInfo = useCallback((obj) => {
-        let newArray = [];
-        for (let prop in obj) {
-            newArray.push({hours: obj[prop], label: editLabel(prop)})
-        }
+        const newArray = Object.entries(obj).map(([key, value]) => {
+            return {
+                hours: value, 
+                label: mapAcademicTypeLoadToDescription[key]
+            }
+        });
+
         setDisciplineHours(newArray);
-    }, [setDisciplineHours]);
+    }, [setDisciplineHours, employee_name]);
+
+    let arrayHours = disciplineHours.map(item => item.hours);
 
     //---Выводим информацию по определенной дисцеплине у выбранного работника---
-    const updateDisciplineInfo = useCallback((id_e, id_d) => {
-        console.log(1);
-        // EmployeeService
-        //     .getDisciplineInfo(id_e, id_d)
-        //     .then((disciplineInfo) => {
-        //         setDisciplineInfo(disciplineInfo)
-        //         return disciplineInfo
-        //     })
-        //     .then((disciplineInfo) => insertDisciplineInfo(disciplineInfo));
-    }, []);
-
-    function editLabel(label){
-        switch (label) {
-            case 'lectures':
-                label = 'Лекции';
-                break;
-            case 'seminar':
-                label = 'Семинарские (практические) занятия';
-                break;
-            case 'diploma':
-                label = 'Руководство дипломными (курсовыми) работами';
-                break;
-            case 'sets':
-                label = 'Зачеты';
-                break;
-            case 'exams':
-                label = 'Экзамены';
-                break;
-            case 'consultations':
-                label = 'Консультации';
-                break;
-            case 'other':
-                label = 'Другая учебная работа';
-                break;
-            default:
-                break;
-        }
-        return label;
-    };
+    const updateDisciplineInfo = useCallback(async (id_e, id_d) => {
+        const discipline = await EmployeeService.getDisciplineInfo(id_e, id_d);
+        setDisciplineInfo(discipline);
+        insertDisciplineInfo(discipline);
+        readyToPrint(true);
+    }, [setDisciplineInfo, employee_name]);
 
     const disciplineList = disciplines.map((element, i) => {
         return (
-            <div key={i} 
-                className="discipline-card" 
+            <div className="card bg-light mb-2"
+                key={i}
                 onClick={() => updateDisciplineInfo(employee_id, element.discipline_id)}>
-                <img src={img} alt="" height="28" width="28"/>
-                <p>{ element.discipline_name}</p>
+                <div className="card-header">
+                    Дисциплина
+                </div>
+                <div className="card-body text-primary">
+                    <h5 className="card-title">
+                        { element.discipline_name}
+                    </h5>
+                </div>
             </div>
         );
     });
 
     const disciplineListInFo = disciplineHours.map((element, i) => {
         return (
-            <li className="list-group-item" key={i}>
-                { element.label } : {element.hours}
+            <li className="list-group-item d-flex justify-content-between align-items-center" 
+                key={i}>
+                { element.label } 
+                <span className="badge badge-primary badge-pill">{element.hours}</span>
             </li>
         );
     });
 
-    const handleCheck = useCallback((e) => {
-        readyToPrint(e.target.checked);
-    }, [readyToPrint]);
+    const renderPrintDoc = useCallback(() => {
+        if(!print) {
+            return null;
+        }
 
-    //---Расчёт стоимости для документа
-    let arrayHours = [];
-    let multiplier = 0;
-        switch (employee_skill) {
-            case 'ассистент':
-                multiplier = 180;
-                break;
-            case 'старший преподаватель':
-                multiplier = 280;
-                break;
-            case 'доцент':
-                multiplier = 380;
-                break;
-            case 'профессор':
-                multiplier = 480;
-                break;
-            default:
-                break;
-        };
-        disciplineHours.map((element) => {
-            return arrayHours.push(element.hours);
-        })
-
-    let selectDisc = disciplineHours.length === 0 
-                    ? null 
-                    : disciplineListInFo
-
-    const printDoc = print === false 
-                    ? null 
-                    : <CreateDocument name={employee_name}
-                        position={employee_skill}
-                        lecturesValue={multiplier}
-                        lecturesHours={arrayHours[0]}
-                        seminarValue={multiplier}
-                        seminarHours={arrayHours[1]}/>  
+        return (
+            <>
+                <ul className="list-group mb-3" style={{'maxWidth' : '600px'}}>
+                    <label 
+                        className="col-3 col-form-label">
+                            Часы:
+                    </label>
+                    {disciplines.length > 0 ? disciplineListInFo : null}
+                </ul>
+                <CreateDocument 
+                    name={employee_name}
+                    position={employee_skill}
+                    lecturesValue={mapHoursToMultiplier[employee_skill]}
+                    lecturesHours={arrayHours[0] ?? ''}
+                    seminarValue={mapHoursToMultiplier[employee_skill]}
+                    seminarHours={arrayHours[1] ?? ''}
+                /> 
+            </> 
+        );
+    });
 
     return (
         <>
-            <div className="container">
+            <div className="card-deck pt-2">
                 {disciplineList}
             </div>
-            <ul className="comma-list">
-                { selectDisc }
-            </ul>
-            <input type="checkbox" checked={print}
-                   onChange={handleCheck}> 
-            </input>
-            {printDoc}
+            {renderPrintDoc()}
         </>
     )
 };
 
-export default Employee;
+export default memo(Employee);

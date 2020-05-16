@@ -1,7 +1,7 @@
 import React from 'react';
 
 import HistoryTable from './employee-history/employee-history';
-import EmployeeList from './employee-list/employee-list';
+import SelectReport from './components/SelectReport/SelectReport';
 import EmployeeTable from './employee-table/employee-table';
 import AlertState from './context/alert/AlertState';
 import NavBar from './components/Navbar';
@@ -23,7 +23,7 @@ export default class App extends React.Component {
                                 <Alert/>
                                 <Switch>
                                     <Route path={'/'} exact component={EmployeeTable}/>
-                                    <Route path={'/reports'} component={EmployeeList}/>
+                                    <Route path={'/reports'} component={SelectReport}/>
                                     <Route path={'/history'} component={HistoryTable}/>             
                                 </Switch>
                             </div>

@@ -1,15 +1,20 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { AlertContext } from '../context/alert/alertContext';
 
 const AddEmployee = () => {
-    const [name, setName] = useState('');
-    const [date_start, setDateStart] = useState('');
-    const [date_end, setDateEnd] = useState('');
-    const [number, setNumber] = useState('');
-    const [department] = useState('Факультет инновационных технологий(ФИТ)');
-    const [position, setPosition] = useState('ассистент');
 
-    const alert = useContext(AlertContext)
+    const defaultState = {
+        name: '',
+        date_start: '',
+        date_end: '',
+        number: '',
+        department: 'Факультет инновационных технологий(ФИТ)',
+        position: 'ассистент',
+    };
+
+    const [form, setForm] = useState(defaultState);
+
+    const alert = useContext(AlertContext);
 
     const submitHandler = e => {
       e.preventDefault();
@@ -30,8 +35,8 @@ const AddEmployee = () => {
                         className="form-control"
                         id="name"
                         placeholder="Фамилия Имя Отчество"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}/>
+                        value={form.name}
+                        onChange={(e) => setForm({...form, name: e.target.value})} />
                 </div>
 
                 <div className="form-group row">
@@ -44,7 +49,7 @@ const AddEmployee = () => {
                         type="text" 
                         className="form-control"
                         id="department"
-                        value={department}
+                        value={form.department}
                         readOnly
                         disabled/>
                 </div>
@@ -57,9 +62,9 @@ const AddEmployee = () => {
                     </label>
                     <select 
                         className="form-control"
-                        value={position}
+                        value={form.position}
                         id="position"
-                        onChange={(e) => setPosition(e.target.value)}>
+                        onChange={(e) => setForm({...form, position: e.target.value})}>
                             <option>aссистент</option>
                             <option>научный сотрудник</option>
                             <option>старший преподаватель</option>
@@ -79,8 +84,8 @@ const AddEmployee = () => {
                         className="form-control"
                         id="name"
                         placeholder="№___/__"
-                        value={number}
-                        onChange={(e) => setNumber(e.target.value)}/>
+                        value={form.number}
+                        onChange={(e) => setForm({...form, number: e.target.value})} />
                 </div>
 
                 <div className="form-group row">
@@ -92,8 +97,8 @@ const AddEmployee = () => {
                     <input 
                         className="form-control" 
                         type="date" 
-                        value={date_start}
-                        onChange={(e) => setDateStart(e.target.value)}
+                        value={form.date_start}
+                        onChange={(e) => setForm({...form, date_start: e.target.value})} />
                         id="date-start"/>
                 </div>
 
@@ -106,8 +111,8 @@ const AddEmployee = () => {
                     <input 
                         className="form-control" 
                         type="date" 
-                        value={date_end}
-                        onChange={(e) => setDateEnd(e.target.value)}
+                        value={form.date_end}
+                        onChange={(e) => setForm({...form, date_end: e.target.value})} />
                         id="date-end"/>
                 </div>
                 <button  

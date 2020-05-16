@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
-import EmployeeService from '../service/ApiService';
-import Employee from '../employee-data/employee-data';
-import {Card1, Card2} from '../components/Card';
+import EmployeeService from '../../service/ApiService';
+import Employee from '../../employee-data/employee-data';
+import {Card1, Card2} from '../Card';
 
 
-function EmployeeList() {
+function SelectReport() {
     const [employees, setEmployees] = useState([]);
     const [selectedEmployee, setSelectedEmployee] = useState({});
     const [page, setPage] = useState('Main');
@@ -14,6 +14,7 @@ function EmployeeList() {
         EmployeeService
             .getEmployees()
             .then((data) => {
+                console.log(data);
                 setEmployees(data);
             });
     }, [setEmployees]);
@@ -75,7 +76,9 @@ function EmployeeList() {
             break;
     };
     
-    const employeeInfo = Object.keys(selectedEmployee).length === 0 ? null : <Employee selectedEmployee={selectedEmployee}/>
+    const employeeInfo = Object.keys(selectedEmployee).length === 0 
+    ? null 
+    : <Employee selectedEmployee={selectedEmployee}/>
 
     return (
         <div className="container pt-2">
@@ -85,4 +88,4 @@ function EmployeeList() {
     );
 };
 
-export default EmployeeList;
+export default SelectReport;
