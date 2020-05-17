@@ -4,7 +4,7 @@ import dateFormat from 'dateformat';
 
 
 const PopUp = (props) => {
-    const {show, hide, data, closeModal} = props;
+    const {show, data, closeModal} = props;
 
     console.log(data);
 
@@ -24,19 +24,15 @@ const PopUp = (props) => {
     return (
         <Modal show={show} onHide={closeModal}>
             <Modal.Header closeButton>
-                <Modal.Title>Подтвердите отправку отвара</Modal.Title>
+                <Modal.Title>Изменить данные</Modal.Title>
             </Modal.Header>
 
             <Modal.Body>
-                <p>Отлично, почти всё готово!</p>
                 <table className="table table-hover table-bordered">
+                    <thead>
+
+                    </thead>
                     <tbody>
-                        <tr className="table-primary">
-                            <td>Title</td>
-                            <td>Price</td>
-                            <td>Count</td>
-                            <td>Total</td>
-                        </tr>
                         {dataRows}
                     </tbody>
                 </table>

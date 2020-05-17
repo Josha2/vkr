@@ -1,168 +1,69 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import dateFormat from 'dateformat';
-import { Pagination } from '../components/Paginations';
+import Pagination from '../components/Pagination';
 import PopUp from '../components/PopUp';
 import AddEmployee from '../form-add-employee/form-add-employee';
 import ApiService from '../service/ApiService';
 import AddWorkLoad from '../components/AddWorkLoad/AddWorkLoad';
 import Tabs from '../tabs/tabs';
-
+import PrintTable from '../components/PrintTable/PrintTable';
 
 import edit from './edit.png';
 import './employee-table.css';
-import search from './search.png';
 
+const EmployeeTable = () =>  {
 
-export default class EmployeeTable extends React.Component {
+    const [currentItem, setCurrentItem] = useState(null);
+    const [isModalOpen, setModal] = useState(false);
+    const [total, setTotal] = useState(null);
 
-    state = {
-        employees: [],
-        currentPage: 1,
-        employeesPerPage: 6,
-        term: '',
-        loading: true,
-        isOpenModal: false,
-        currentItem: null
+    const showModal = (item) => {
+        setCurrentItem(item);
+        setModal(true);
     };
-
-    componentDidMount() {
-        ApiService.getEmployees()
-            .then((employees) =>{
-                this.setState({
-                    employees,
-                    loading: false
-                });
-            });
-
-    };
-
-    paginate = (currentPage) => {
-        this.setState({
-            currentPage
-        });
-    };
-
-    nextPage = (currentEmployees) => {
-        if(currentEmployees.length > 5){
-            this.setState({
-                currentPage: this.state.currentPage + 1
-            });
-        };
-    };
-
-    prevPage = (currentPage) => {
-        if(currentPage !== 1) {
-            this.setState({
-                currentPage: this.state.currentPage - 1
-            });
-        };
-    };
-
-    search = (arr, term) => {
-        if (term.length === 0){
-            return arr;
-        }
-
-        return arr.filter((element) => {
-            return element.employee_name
-                .toLowerCase()
-                .indexOf(term.toLowerCase()) > -1;
-        });
-    };
-
-    showModal = (item) => {
-        this.setState({
-            currentItem: item,
-            isOpenModal: true
-        });
-
-    }
     
-    closeModal = () => {
-        this.setState({isOpenModal: false})
-    }
+    const closeModal = () => {
+        setModal(false);
+    };
 
-    render(){
-        let { employees, term, isOpenModal: modal } = this.state;
-        const visibleEmployees = this.search(employees, term);
-
-        const indexOfLastEmployee = this.state.currentPage * this.state.employeesPerPage;
-        const IndexOfFirstEmployee = indexOfLastEmployee - this.state.employeesPerPage;
-        const currentEmployees = visibleEmployees.slice(IndexOfFirstEmployee, indexOfLastEmployee);
-
-
-        const employeesRows = currentEmployees.map((item, i) => {
-            return (
-                <>
-                <tr key={i}>
-                    <td className="column0-employee">
-                        <img 
-                            onClick={() => this.showModal(item)}
-                            src={edit} 
-                            alt="" 
-                            height="25" 
-                            width="25"/>
-                    </td>
-                    <td className="column1-employee">{item.employee_number}</td>
-                    <td className="column2-employee">{dateFormat(item.employee_start, 'dd-mm-yyyy')}</td>
-                    <td className="column3-employee">{dateFormat(item.employee_end, 'dd-mm-yyyy')}</td>
-                    <td className="column4-employee">{item.employee_name}</td>
-                    <td className="column5-employee">{item.employee_department}</td>
-                    <td className="column6-employee">{item.employee_skill}</td>
-                </tr>
-                </>
-            )
-        })
+    const employeeTable = (                
+        <PrintTable
+            getData={ApiService.getEmployees}
+            setTotal={setTotal} 
+            headerTitles={[
+                'Изменить', 'Договор',
+                'Дата начала договора', 'Дата конца договора',
+                'ФИО', 'Факультет', 'Должность']}>
+                {(item) => (
+                    <>  
+                        <td>
+                            <img src={edit} alt="" height="25"  width="25" onClick={() => showModal(item)}/>
+                        </td>
+                        <td>{item.employee_number}</td>
+                        <td>{item.employee_start}</td>
+                        <td>{item.employee_end}</td>
+                        <td>{item.employee_name}</td>
+                        <td>{item.employee_department}</td>
+                        <td>{item.employee_skill}</td>
+                    </>
+                )}
+        </PrintTable>
+    );
 
         return (
             <>
             <PopUp 
-                show={this.state.isOpenModal} 
-                hide={() => this.setState({ modal: false})} 
-                data={this.state.currentItem} 
-                closeModal={this.closeModal}
+                show={isModalOpen} 
+                hide={() => setModal(false)} 
+                data={currentItem} 
+                closeModal={closeModal}
             />
             <div className="container pt-2">
                 <Tabs>
-                    <div className="table-main-employee" label="Список" total={` (${visibleEmployees.length})`}>
-                        <div className="input-group mt-2" style={{'width': '250px'}}>
-                            <div className="input-group-prepend">
-                            <span className="input-group-text" id="basic-addon1">
-                                <img src={search} alt="" height="20" width="20"/>
-                            </span>
-                            </div>
-                            <input 
-                                type="text" 
-                                className="form-control" 
-                                placeholder="поиск по ФИО"
-                                style={{'width': '150px'}}
-                                onChange={(e) => this.setState({ term: e.target.value, currentPage: 1 })}/>
-                        </div>
-                        <table className="table-employee">
-                            <thead>
-                                <tr> 
-                                    <th>Изменить</th>
-                                    <th>Договор</th>
-                                    <th>Дата начала договора</th>
-                                    <th>Дата конца договора</th>
-                                    <th>ФИО</th>
-                                    <th>Факультет</th>
-                                    <th>Должность</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {employeesRows}
-                            </tbody>
-                        </table>
-                        <Pagination 
-                            employeesPerPage={this.state.employeesPerPage} 
-                            totalPages={visibleEmployees.length}
-                            currentEmployees={currentEmployees}
-                            currentPage={this.state.currentPage}
-                            paginate={this.paginate}
-                            nextPage={this.nextPage}
-                            prevPage={this.prevPage}/>
+
+                    <div label="Сотрудники" className="table-main" total={` (${total})`}>
+                    {employeeTable} 
                     </div>
 
                     <div label="Добавить сотрудника">
@@ -175,6 +76,7 @@ export default class EmployeeTable extends React.Component {
                 </Tabs>
             </div>
             </>
-        )
-    }
-}
+        );
+};
+
+export default EmployeeTable;

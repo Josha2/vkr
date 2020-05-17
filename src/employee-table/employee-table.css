@@ -2,7 +2,7 @@
 
 /*///////////////////////////////////////////////////////////////
 [ Table ]*/
-.table-employee {
+.table-name {
     border-collapse: collapse;
     border: 1px solid #d4d4d4;
     margin: 0 auto;
@@ -34,7 +34,7 @@
     width: 15%;
 }
 
-.table-employee th{
+.table-name th{
     background: rgb(79, 157, 221);
     text-shadow: 0 1px 0 #38678f;
     color: white;
@@ -47,7 +47,7 @@
 
 }
 
-.table-employee td{
+.table-name td{
     height: 90px;
     padding-left: 10px;
     padding-right: 10px;
@@ -57,14 +57,14 @@
     
 }
 
-.table-employee tr{
+.table-name tr{
     border: 1px solid #d4d4d4;
     font-weight: 400;
     line-height: 1.5;
     
 }
 
-.table-employee td:hover {
+.table-name td:hover {
     background-color: #f7f7f7;
 }
   

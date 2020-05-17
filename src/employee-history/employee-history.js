@@ -2,7 +2,7 @@ import React from 'react';
 
 import ApiService from '../service/ApiService';
 import dateFormat from 'dateformat';
-import { PaginationHistory } from '../components/PaginationsHistory';
+import Pagination from '../components/Pagination';
 
 import search from './search.png';
 import question from './question.png';
@@ -124,10 +124,10 @@ export default class HistoryTable extends React.Component {
                         {historyRows}
                     </tbody>
                 </table>
-                <PaginationHistory 
-                            employeesPerPage={this.state.employeesPerPage} 
+                <Pagination
+                            dataPerPage={this.state.employeesPerPage} 
                             totalPages={visibleEmployees.length}
-                            currentEmployees={currentEmployees}
+                            currentGroup={currentEmployees}
                             currentPage={this.state.currentPage}
                             paginate={this.paginate}
                             nextPage={this.nextPage}

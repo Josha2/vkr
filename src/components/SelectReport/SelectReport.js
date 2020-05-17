@@ -5,7 +5,7 @@ import Employee from '../../employee-data/employee-data';
 import {Card1, Card2} from '../Card';
 
 
-function SelectReport() {
+const SelectReport = () => {
     const [employees, setEmployees] = useState([]);
     const [selectedEmployee, setSelectedEmployee] = useState({});
     const [page, setPage] = useState('Main');
@@ -72,6 +72,7 @@ function SelectReport() {
             break;
         case 'Card1':
             mainpage = showEmployeeList();
+            break;
         default:
             break;
     };

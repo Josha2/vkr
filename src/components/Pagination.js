@@ -1,16 +1,16 @@
 import React from 'react';
 
-import './Paginations.css';
+import './Pagination.css';
 
-export const Pagination = ({ employeesPerPage, totalPages, currentEmployees, currentPage, paginate, nextPage, prevPage }) => {
+const Pagination = ({ dataPerPage, totalPages, currentGroup, currentPage, paginate, nextPage, prevPage }) => {
     //---Высчитываем количество страниц
     const pageNumbers = [];
-    for (let index = 1; index <= Math.ceil(totalPages / employeesPerPage); index++) {
+    for (let index = 1; index <= Math.ceil(totalPages / dataPerPage); index++) {
         pageNumbers.push(index)
     }
 
     let classNameNext = "page-item";
-    if(currentEmployees.length < 6){
+    if(currentGroup.length < 6){
         classNameNext += " disabled";
     } 
 
@@ -67,7 +67,7 @@ export const Pagination = ({ employeesPerPage, totalPages, currentEmployees, cur
                     className="page-link"
                     aria-label="Next"
                     style={{'color': '#4F9DDD'}}
-                    onClick={() => nextPage(currentEmployees)}>
+                    onClick={() => nextPage(currentGroup)}>
                     <span aria-hidden="true">
                         &raquo;
                     </span>
@@ -81,3 +81,5 @@ export const Pagination = ({ employeesPerPage, totalPages, currentEmployees, cur
         </nav>
     );
 };
+
+export default Pagination;
