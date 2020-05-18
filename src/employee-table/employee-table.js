@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 
 import dateFormat from 'dateformat';
-import Pagination from '../components/Pagination';
-import PopUp from '../components/PopUp';
 import AddEmployee from '../form-add-employee/form-add-employee';
 import ApiService from '../service/ApiService';
 import AddWorkLoad from '../components/AddWorkLoad/AddWorkLoad';
@@ -11,6 +9,7 @@ import PrintTable from '../components/PrintTable/PrintTable';
 
 import edit from './edit.png';
 import './employee-table.css';
+import PersonDetails from '../components/PersonDetails/PersonDetails';
 
 const EmployeeTable = () =>  {
 
@@ -41,8 +40,8 @@ const EmployeeTable = () =>  {
                             <img src={edit} alt="" height="25"  width="25" onClick={() => showModal(item)}/>
                         </td>
                         <td>{item.employee_number}</td>
-                        <td>{item.employee_start}</td>
-                        <td>{item.employee_end}</td>
+                        <td>{dateFormat(item.employee_start, 'dd-mm-yyyy')}</td>
+                        <td>{dateFormat(item.employee_end, 'dd-mm-yyyy')}</td>
                         <td>{item.employee_name}</td>
                         <td>{item.employee_department}</td>
                         <td>{item.employee_skill}</td>
@@ -53,10 +52,10 @@ const EmployeeTable = () =>  {
 
         return (
             <>
-            <PopUp 
+            <PersonDetails 
                 show={isModalOpen} 
                 hide={() => setModal(false)} 
-                data={currentItem} 
+                item={currentItem ?? {}} 
                 closeModal={closeModal}
             />
             <div className="container pt-2">

@@ -57,6 +57,7 @@ function Employee(props) {
             }
         });
 
+        console.log(newArray)
         setDisciplineHours(newArray);
     }, [setDisciplineHours, employee_name]);
 

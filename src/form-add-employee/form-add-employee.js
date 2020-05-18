@@ -98,7 +98,7 @@ const AddEmployee = () => {
                         className="form-control" 
                         type="date" 
                         value={form.date_start}
-                        onChange={(e) => setForm({...form, date_start: e.target.value})} />
+                        onChange={(e) => setForm({...form, date_start: e.target.value})}
                         id="date-start"/>
                 </div>
 
@@ -112,7 +112,7 @@ const AddEmployee = () => {
                         className="form-control" 
                         type="date" 
                         value={form.date_end}
-                        onChange={(e) => setForm({...form, date_end: e.target.value})} />
+                        onChange={(e) => setForm({...form, date_end: e.target.value})}
                         id="date-end"/>
                 </div>
                 <button  

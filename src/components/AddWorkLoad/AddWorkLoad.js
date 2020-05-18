@@ -129,13 +129,13 @@ const AddWorkLoad = () => {
 
                 <div className="form-group row">
                     <label 
-                        htmlFor="history" 
+                        htmlFor="disciplines" 
                         className="col-3 col-form-label">
                             Выберите учебную дисциплину:
                     </label>
                     <select 
                         className="form-control"
-                        id="history"
+                        id="disciplines"
                         onChange={(e) => {}}>
                             {disciplinesList}
                     </select>

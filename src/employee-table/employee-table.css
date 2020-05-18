@@ -67,4 +67,7 @@
 .table-name td:hover {
     background-color: #f7f7f7;
 }
-  
+
+img {
+    cursor: pointer;
+}

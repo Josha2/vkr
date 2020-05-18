@@ -13,8 +13,9 @@ const connection = mysql.createConnection({
     database: 'uni',
     dateStrings: 'date'
 });
+app.use(express.static('public'));
+app.use('/img', express.static('images'));
 
-console.log(connection);
 app.use(cors());
 
 app.get('/', (req, res) => {
