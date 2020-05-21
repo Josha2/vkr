@@ -3,7 +3,9 @@ import React, { useCallback, useEffect, useState, memo } from 'react';
 import {usePrevious} from '../helpers/usePrevious';
 import CreateDocument from '../print-document/print-document';
 import EmployeeService from '../service/ApiService';
+
 import './employee-data.css';
+
 
 const mapAcademicTypeLoadToDescription = {
     lectures: 'Лекции',
@@ -115,10 +117,14 @@ function Employee(props) {
                 <CreateDocument 
                     name={employee_name}
                     position={employee_skill}
-                    lecturesValue={mapHoursToMultiplier[employee_skill]}
+                    multiplier={mapHoursToMultiplier[employee_skill]}
                     lecturesHours={arrayHours[0] ?? ''}
-                    seminarValue={mapHoursToMultiplier[employee_skill]}
                     seminarHours={arrayHours[1] ?? ''}
+                    diplomaHours={arrayHours[2] ?? ''}
+                    setsHours={arrayHours[3] ?? ''}
+                    examsHours={arrayHours[4] ?? ''}
+                    consultationHours={arrayHours[5] ?? ''}
+                    otherHours={arrayHours[6] ?? ''}
                 /> 
             </> 
         );

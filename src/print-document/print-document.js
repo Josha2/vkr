@@ -1,7 +1,8 @@
 import React from 'react';
 import propTypes from 'prop-types';
 import fs from 'file-saver';
-import { Document, Packer, Paragraph, TextRun, AlignmentType, HeadingLevel, Table, TableCell, TableRow, WidthType } from "docx"
+import numberToLetters from './numberToLetters';
+import { Document, Packer, Paragraph, TextRun, AlignmentType, HeadingLevel, Table, TableCell, TableRow, WidthType } from "docx";
  
 export default class CreateDocument extends React.Component {
 
@@ -10,15 +11,27 @@ export default class CreateDocument extends React.Component {
     static propTypes = {
         name: propTypes.string,
         position: propTypes.string,
-        lecturesValue: propTypes.number,
-        lecturesHours: propTypes.number,
-        seminarValue: propTypes.number,
-        seminarHours: propTypes.number,
-    }
+        multiplier: propTypes.number,
+        lecturesHours: propTypes.any,
+        seminarHours: propTypes.any,
+        diplomaHours: propTypes.any,
+        setsHours: propTypes.any,
+        examsHours: propTypes.any,
+        consultationHours: propTypes.any,
+        otherHours: propTypes.any,
+    };
 
     componentDidMount(){
         this.createDocument();
-    }
+    };
+
+    total = `${(this.props.lecturesHours*this.props.multiplier)+
+            (this.props.seminarHours*this.props.multiplier)+
+            (this.props.diplomaHours*this.props.multiplier)+
+            (this.props.setsHours*this.props.multiplier)+
+            (this.props.examsHours*this.props.multiplier)+
+            (this.props.consultationHours*this.props.multiplier)+
+            (this.props.otherHours*this.props.multiplier)}`
 
     createDocument = () => {
         this.doc.addSection({
@@ -215,12 +228,12 @@ export default class CreateDocument extends React.Component {
                                 size: 18,
                             }), 
                             new TextRun({
-                                text: (` устанавливается единовременная доплата в размере 8040 `),
+                                text: (` устанавливается единовременная доплата в размере ${this.total} `),
                                 font: 'Times New Roman',
                                 size: 18,
                             }), 
                             new TextRun({
-                                text: (`(Восемь тысяч сорок) рублей,`),
+                                text: `${numberToLetters(this.total)}`,
                                 underline: true,
                                 italics: true,
                                 font: 'Times New Roman',
@@ -238,12 +251,12 @@ export default class CreateDocument extends React.Component {
                                 size: 18,
                             }),
                             new TextRun({
-                                text: (` в размере 8040 `),
+                                text: (` в размере ${this.total} `),
                                 font: 'Times New Roman',
                                 size: 18,
                             }), 
                             new TextRun ({
-                                text: `(Восемь тысяч сорок) рублей`,
+                                text: `${numberToLetters(this.total)}`,
                                 underline: true,
                                 italics: true,
                                 font: 'Times New Roman',
@@ -609,7 +622,7 @@ export default class CreateDocument extends React.Component {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: `  ${this.props.lecturesValue}`,
+                                            text: `  ${this.props.lecturesHours === '' ? '' : this.props.multiplier}`,
                                             font: 'Times New Roman',
                                             size: 18,
                                             })
@@ -637,7 +650,7 @@ export default class CreateDocument extends React.Component {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: `  ${this.props.lecturesValue*this.props.lecturesHours}`,
+                                            text: `  ${this.props.lecturesHours === '' ? '' : this.props.multiplier*this.props.lecturesHours}`,
                                             font: 'Times New Roman',
                                             size: 18,
                                             })
@@ -670,7 +683,7 @@ export default class CreateDocument extends React.Component {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: `  ${this.props.seminarValue}`,
+                                            text: `  ${this.props.seminarHours === '' ? '' : this.props.multiplier}`,
                                             font: 'Times New Roman',
                                             size: 18,
                                             })
@@ -698,7 +711,7 @@ export default class CreateDocument extends React.Component {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: `  ${this.props.seminarValue*this.props.seminarHours}`,
+                                            text: `  ${this.props.seminarHours === '' ? '' : this.props.multiplier*this.props.seminarHours}`,
                                             font: 'Times New Roman',
                                             size: 18,
                                             })
@@ -731,7 +744,7 @@ export default class CreateDocument extends React.Component {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: "  ",
+                                            text: `  ${this.props.diplomaHours === '' ? '' : this.props.multiplier}`,
                                             font: 'Times New Roman',
                                             size: 18,
                                             })
@@ -745,7 +758,7 @@ export default class CreateDocument extends React.Component {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: "  ",
+                                            text: `  ${this.props.diplomaHours}`,
                                             font: 'Times New Roman',
                                             size: 18,
                                             })
@@ -759,7 +772,7 @@ export default class CreateDocument extends React.Component {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: "  ",
+                                            text: `  ${this.props.diplomaHours === '' ? '' : this.props.multiplier*this.props.diplomaHours}`,
                                             font: 'Times New Roman',
                                             size: 18,
                                             })
@@ -792,7 +805,7 @@ export default class CreateDocument extends React.Component {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: "  600",
+                                            text: `  ${this.props.setsHours === '' ? '' : this.props.multiplier}`,
                                             font: 'Times New Roman',
                                             size: 18,
                                             })
@@ -806,7 +819,7 @@ export default class CreateDocument extends React.Component {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: "  ",
+                                            text: `  ${this.props.setsHours}`,
                                             font: 'Times New Roman',
                                             size: 18,
                                             })
@@ -820,7 +833,7 @@ export default class CreateDocument extends React.Component {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: "  ",
+                                            text: `  ${this.props.setsHours === '' ? '' : this.props.multiplier*this.props.setsHours}`,
                                             font: 'Times New Roman',
                                             size: 18,
                                             })
@@ -839,7 +852,7 @@ export default class CreateDocument extends React.Component {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: "  Экзамены (4)",
+                                            text: "  Экзамены",
                                             font: 'Times New Roman',
                                             size: 18,
                                             })
@@ -853,7 +866,7 @@ export default class CreateDocument extends React.Component {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: "  ",
+                                            text: `  ${this.props.examsHours === '' ? '' : this.props.multiplier}`,
                                             font: 'Times New Roman',
                                             size: 18,
                                             })
@@ -867,7 +880,7 @@ export default class CreateDocument extends React.Component {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: "  ",
+                                            text: `  ${this.props.examsHours}`,
                                             font: 'Times New Roman',
                                             size: 18,
                                             })
@@ -881,7 +894,7 @@ export default class CreateDocument extends React.Component {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: "  720",
+                                            text: `  ${this.props.examsHours === '' ? '' : this.props.multiplier*this.props.examsHours}`,
                                             font: 'Times New Roman',
                                             size: 18,
                                             })
@@ -914,7 +927,7 @@ export default class CreateDocument extends React.Component {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: "  ",
+                                            text: `  ${this.props.consultationHours === '' ? '' : this.props.multiplier}`,
                                             font: 'Times New Roman',
                                             size: 18,
                                             })
@@ -928,7 +941,7 @@ export default class CreateDocument extends React.Component {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: "  400",
+                                            text: `  ${this.props.consultationHours}`,
                                             font: 'Times New Roman',
                                             size: 18,
                                             })
@@ -942,7 +955,7 @@ export default class CreateDocument extends React.Component {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: "  ",
+                                            text: `  ${this.props.consultationHours === '' ? '' : this.props.multiplier*this.props.consultationHours}`,
                                             font: 'Times New Roman',
                                             size: 18,
                                             })
@@ -975,7 +988,7 @@ export default class CreateDocument extends React.Component {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: "  ",
+                                            text: `  ${this.props.otherHours === '' ? '' : this.props.multiplier}`,
                                             font: 'Times New Roman',
                                             size: 18,
                                             })
@@ -989,7 +1002,7 @@ export default class CreateDocument extends React.Component {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: "  ",
+                                            text: `  ${this.props.otherHours}`,
                                             font: 'Times New Roman',
                                             size: 18,
                                             })
@@ -1003,7 +1016,7 @@ export default class CreateDocument extends React.Component {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: "  ",
+                                            text: `  ${this.props.otherHours === '' ? '' : this.props.multiplier*this.props.otherHours}`,
                                             font: 'Times New Roman',
                                             size: 18,
                                             })
@@ -1064,7 +1077,7 @@ export default class CreateDocument extends React.Component {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: "  ",
+                                            text: `  ${this.total}`,
                                             font: 'Times New Roman',
                                             size: 18,
                                             })
@@ -1099,6 +1112,6 @@ export default class CreateDocument extends React.Component {
                         Создать отчёт
                 </button>
             </div>
-        )
-    }
-}
+        );
+    };
+};

@@ -6,23 +6,24 @@ import ApiService from '../service/ApiService';
 import AddWorkLoad from '../components/AddWorkLoad/AddWorkLoad';
 import Tabs from '../tabs/tabs';
 import PrintTable from '../components/PrintTable/PrintTable';
+import PersonDetails from '../components/PersonDetails/PersonDetails.jsx';
 
 import edit from './edit.png';
 import './employee-table.css';
-import PersonDetails from '../components/PersonDetails/PersonDetails';
+import ModalWindow from '../common/components/ModalWindow';
 
 const EmployeeTable = () =>  {
 
     const [currentItem, setCurrentItem] = useState(null);
     const [isModalOpen, setModal] = useState(false);
-    const [total, setTotal] = useState(null);
+    const [total, setTotal] = useState(0);
 
-    const showModal = (item) => {
+    const onShowModal = (item) => {
         setCurrentItem(item);
         setModal(true);
     };
     
-    const closeModal = () => {
+    const onCloseModal = () => {
         setModal(false);
     };
 
@@ -37,7 +38,7 @@ const EmployeeTable = () =>  {
                 {(item) => (
                     <>  
                         <td>
-                            <img src={edit} alt="" height="25"  width="25" onClick={() => showModal(item)}/>
+                            <img src={edit} alt="" height="25"  width="25" onClick={() => onShowModal(item)}/>
                         </td>
                         <td>{item.employee_number}</td>
                         <td>{dateFormat(item.employee_start, 'dd-mm-yyyy')}</td>
@@ -52,15 +53,12 @@ const EmployeeTable = () =>  {
 
         return (
             <>
-            <PersonDetails 
-                show={isModalOpen} 
-                hide={() => setModal(false)} 
-                item={currentItem ?? {}} 
-                closeModal={closeModal}
-            />
+            <ModalWindow title="Изменить данные" isOpen={isModalOpen} onClose={onCloseModal} >
+                <PersonDetails personInfo={currentItem ?? {}}/>
+            </ModalWindow>
+
             <div className="container pt-2">
                 <Tabs>
-
                     <div label="Сотрудники" className="table-main" total={` (${total})`}>
                     {employeeTable} 
                     </div>
