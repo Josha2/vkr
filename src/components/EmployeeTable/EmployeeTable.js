@@ -57,7 +57,7 @@ const EmployeeTable = () =>  {
 
             <div className="container pt-2">
                 <Tabs>
-                    <div label="Сотрудники" className="table-main" total={` (${total})`}>
+                    <div label="Сотрудники" className="table-main">
                     {employeeTable} 
                     </div>
 
