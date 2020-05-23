@@ -1,13 +1,10 @@
 import React from 'react';
-import { withFormik } from 'formik';
-import { TextField, MenuItem, Select, InputLabel } from '@material-ui/core';
-import DateFnsUtils from '@date-io/date-fns';
-import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import dateFormat from 'dateformat';
 import styled from 'styled-components';
-
-import './PersonDetails.css';
+import { withFormik } from 'formik';
 import img from './1.png';
+import './PersonDetails.css';
+import { InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
+
 
 const Root = styled.div`
     padding: 0.25rem;
@@ -28,22 +25,24 @@ const positionArray = [
 ];
 
 const PersonDetailsLayout = (props) => {
-    const {values, handleChange, handleBlur, handleSubmit} = props;
+    const { values, handleChange, handleBlur, handleSubmit } = props;
 
     const menuItems = positionArray.map((item, i) => {
         if (item !== values.position) {
-            return <MenuItem value={item}>{item}</MenuItem>
+            return <MenuItem value={item} key={i}>{item}</MenuItem>
         }
+
+        return null;
     });
 
     return (
         <Root className="card">
-            <PersonImage  alt="#" src={img}/>
+            <PersonImage alt="#" src={img} />
             <div className="card-body">
                 <form onSubmit={handleSubmit}>
                     <ul className="list-group">
                         <li className="list-group-item d-flex justify-content-between align-items-center">
-                            <TextField 
+                            <TextField
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 value={values.fullName}
@@ -54,7 +53,7 @@ const PersonDetailsLayout = (props) => {
                             />
                         </li>
                         <li className="list-group-item d-flex justify-content-between align-items-center">
-                            <TextField 
+                            <TextField
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 value={values.contractNumber}
@@ -102,14 +101,14 @@ const PersonDetailsLayout = (props) => {
 };
 
 const initialValues = {
-    fullName: '', 
+    fullName: '',
     contractNumber: '',
     position: '',
     dateStart: ''
 };
 
 const PersonDetailsForm = withFormik({
-    mapPropsToValues: ({personInfo}) => (convertPersonalDetailsClientToServer(personInfo) || initialValues),
+    mapPropsToValues: ({ personInfo }) => (convertPersonalDetailsClientToServer(personInfo) || initialValues),
     handleSubmit: (values) => {
         console.log(values);
     },

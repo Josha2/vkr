@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useContext,  } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { AlertContext } from '../../common/components/context/alert/alertContext';
 import EmployeeService from '../../service/ApiService';
-import { AlertContext } from '../../context/alert/alertContext';
-import { TextField, MenuItem, Select, InputLabel } from '@material-ui/core';
-
 
 const mapAcademicHours = [
     {
@@ -54,11 +52,13 @@ const AddWorkLoad = () => {
 
     useEffect(() => {
         const fetch = async () => {
+            const employees = await EmployeeService.getEmployees();
             const disciplines = await EmployeeService.getDisciplines();
-            setForm({...defaultState, disciplines});
+            setForm({...defaultState, employees, disciplines});
         };
 
         fetch();
+        // eslint-disable-next-line
     }, []);
 
     const disciplinesList = form.disciplines.map((item) => {
@@ -68,16 +68,6 @@ const AddWorkLoad = () => {
             </option>
         );
     });
-
-
-    useEffect(() => {
-        const fetch = async () => {
-            const employees = await EmployeeService.getEmployees();
-            setForm({...defaultState, employees});
-        };
-
-        fetch();
-    }, []);
 
     const employeesList = form.employees.map((item) => {
         return (
@@ -94,10 +84,10 @@ const AddWorkLoad = () => {
                     {item.label}
                 </label>
                 <div className="col-sm-10">
-                    <input 
+                    <input
                         type="text" 
                         className="form-control form-control-sm"
-                        style={{'width': '120px'}}
+                        style={{width: 120}}
                         id={item.value}
                         onChange={(e) => setForm({...defaultState, [item.value]: e.target.value})}/>
                 </div>
@@ -109,7 +99,6 @@ const AddWorkLoad = () => {
         e.preventDefault();
         alert.show(' Учебная нагрузка успешно добавлена!', 'success');
     };
-
 
     return (
         <form onSubmit={submitHandler}>

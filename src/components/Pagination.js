@@ -25,11 +25,10 @@ const Pagination = ({ dataPerPage, totalPages, currentGroup, currentPage, pagina
             <ul className="pagination justify-content-center">
 
                 <li className={classNamePrev}>
-                <a 
-                    href="/#"
+                <button 
                     className="page-link" 
                     aria-label="Previous"
-                    style={{'color': '#4F9DDD'}}
+                    style={{color: '#4F9DDD'}}
                     onClick={() => prevPage(currentPage)}>
                     <span aria-hidden="true">
                         &laquo;
@@ -37,7 +36,7 @@ const Pagination = ({ dataPerPage, totalPages, currentGroup, currentPage, pagina
                     <span className="sr-only">
                         Previous
                     </span>
-                </a>
+                </button>
 
                 </li>
 
@@ -52,21 +51,19 @@ const Pagination = ({ dataPerPage, totalPages, currentGroup, currentPage, pagina
                         <li 
                             key={element} 
                             className={classNames}>
-                            <a 
-                                href="/#"
+                            <button 
                                 className="page-link"
                                 onClick={() => paginate(element)}>
                                 {element}
-                            </a>
+                            </button>
                         </li>
                 )})}
 
                 <li className={classNameNext}>
-                <a 
-                    href="/#"
+                <button
                     className="page-link"
                     aria-label="Next"
-                    style={{'color': '#4F9DDD'}}
+                    style={{color : '#4F9DDD'}}
                     onClick={() => nextPage(currentGroup)}>
                     <span aria-hidden="true">
                         &raquo;
@@ -74,7 +71,7 @@ const Pagination = ({ dataPerPage, totalPages, currentGroup, currentPage, pagina
                     <span className="sr-only">
                         Next
                     </span>
-                </a>
+                </button>
 
                 </li>
             </ul>

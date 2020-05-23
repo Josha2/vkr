@@ -3,8 +3,12 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { MenuItem, Select, InputLabel } from '@material-ui/core';
 import EmployeeService from '../../service/ApiService';
 import Employee from '../../employee-data/employee-data';
-import {Card1, Card2} from '../Card';
+import {Card1, Card2} from '../../common/components/Card';
+import styled from 'styled-components';
 
+const FormGroup = styled.div`
+    width: 60%;
+`;
 
 const SelectReport = () => {
     const [employees, setEmployees] = useState([]);
@@ -51,7 +55,7 @@ const SelectReport = () => {
     const showEmployeeList = () => {
         let { employee_name } = employees[0];
         return (
-            <div className="form-group">
+            <FormGroup className="form-group">
                 <InputLabel id="employee-simple-select-outlined-label">
                     Сотрудник:
                 </InputLabel>
@@ -65,7 +69,7 @@ const SelectReport = () => {
                 >
                     {employeesList}
                 </Select>
-          </div>
+          </FormGroup>
         );
     };
 

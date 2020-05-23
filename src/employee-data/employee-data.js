@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState, memo } from 'react';
 
 import {usePrevious} from '../helpers/usePrevious';
+import { InputLabel } from '@material-ui/core';
 import CreateDocument from '../print-document/print-document';
 import EmployeeService from '../service/ApiService';
 
@@ -29,7 +30,6 @@ function Employee(props) {
     const {employee_id, employee_name, employee_skill} = selectedEmployee;
 
     const [disciplines, setDisciplines] = useState([]);
-    const [disciplineInfo, setDisciplineInfo] = useState({});
     const [disciplineHours, setDisciplineHours] = useState([]);
     const [print, readyToPrint] = useState(false);
 
@@ -61,26 +61,22 @@ function Employee(props) {
 
         console.log(newArray)
         setDisciplineHours(newArray);
-    }, [setDisciplineHours, employee_name]);
+    }, [setDisciplineHours]);
 
     let arrayHours = disciplineHours.map(item => item.hours);
 
     //---Выводим информацию по определенной дисцеплине у выбранного работника---
     const updateDisciplineInfo = useCallback(async (id_e, id_d) => {
         const discipline = await EmployeeService.getDisciplineInfo(id_e, id_d);
-        setDisciplineInfo(discipline);
         insertDisciplineInfo(discipline);
         readyToPrint(true);
-    }, [setDisciplineInfo, employee_name]);
+    }, [insertDisciplineInfo]);
 
     const disciplineList = disciplines.map((element, i) => {
         return (
             <div className="card bg-light mb-2"
                 key={i}
                 onClick={() => updateDisciplineInfo(employee_id, element.discipline_id)}>
-                <div className="card-header">
-                    Дисциплина
-                </div>
                 <div className="card-body text-primary">
                     <h5 className="card-title">
                         { element.discipline_name}
@@ -128,10 +124,13 @@ function Employee(props) {
                 /> 
             </> 
         );
-    });
+    }, [arrayHours, disciplineListInFo, disciplines.length, employee_name, employee_skill, print]);
 
     return (
         <>
+            <InputLabel id="simple-select-outlined-label">
+                Дисциплина:
+            </InputLabel>
             <div className="card-deck pt-2">
                 {disciplineList}
             </div>

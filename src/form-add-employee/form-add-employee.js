@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { AlertContext } from '../context/alert/alertContext';
+import { AlertContext } from '../common/components/context/alert/alertContext';
 
 const AddEmployee = () => {
 
