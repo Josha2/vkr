@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
+import { MenuItem, Select, InputLabel } from '@material-ui/core';
 import EmployeeService from '../../service/ApiService';
 import Employee from '../../employee-data/employee-data';
 import {Card1, Card2} from '../Card';
@@ -14,7 +15,6 @@ const SelectReport = () => {
         EmployeeService
             .getEmployees()
             .then((data) => {
-                console.log(data);
                 setEmployees(data);
             });
     }, [setEmployees]);
@@ -22,9 +22,11 @@ const SelectReport = () => {
     const renderItems = useCallback((arr) => {
         return arr.map((item) => {
             return (
-                <option key={item.employee_id}>
+                <MenuItem 
+                    key={item.employee_id}
+                    value={item.employee_name}>
                     {item.employee_name}
-                </option>
+                </MenuItem>
             );
         });
     }, []);
@@ -39,7 +41,7 @@ const SelectReport = () => {
 
     const showAll = () => {
         return (
-            <div class="row">
+            <div className="row">
                 <Card1 show={() => setPage('Card1')}/>
                 <Card2/>
             </div>
@@ -47,19 +49,22 @@ const SelectReport = () => {
     };
 
     const showEmployeeList = () => {
+        let { employee_name } = employees[0];
         return (
             <div className="form-group">
-                <label 
-                    htmlFor="employee" 
-                    className="col-3 col-form-label">
-                        Сотрудник:
-                </label>
-                <select 
-                    className="custom-select" 
-                    onClick={selectEmployee}
-                    id="employee">
-                {employeesList}
-            </select> 
+                <InputLabel id="employee-simple-select-outlined-label">
+                    Сотрудник:
+                </InputLabel>
+                <Select
+                    fullWidth
+                    onChange={selectEmployee}
+                    labelId="employee-simple-select-outlined-label"
+                    id="employee-simple-select-outlined"
+                    name="employee"
+                    value={selectedEmployee.employee_name ?? employee_name}
+                >
+                    {employeesList}
+                </Select>
           </div>
         );
     };
@@ -76,7 +81,7 @@ const SelectReport = () => {
         default:
             break;
     };
-    
+
     const employeeInfo = Object.keys(selectedEmployee).length === 0 
     ? null 
     : <Employee selectedEmployee={selectedEmployee}/>

@@ -1,8 +1,8 @@
 import React from 'react';
 
-import HistoryTable from './employee-history/employee-history';
 import SelectReport from './components/SelectReport/SelectReport';
-import EmployeeTable from './employee-table/employee-table';
+import EmployeeTable from './components/EmployeeTable/EmployeeTable';
+import HistoryTable from './components/HistoryTable/HistoryTable';
 import AlertState from './context/alert/AlertState';
 import NavBar from './components/Navbar';
 import Alert from './components/Alert';

@@ -1,7 +1,3 @@
-@import url('https://fonts.googleapis.com/css?family=Istok+Web:400,400i,700&display=swap&subset=cyrillic');
-
-/*///////////////////////////////////////////////////////////////
-[ Table ]*/
 .table-name {
     border-collapse: collapse;
     border: 1px solid #d4d4d4;
@@ -12,26 +8,6 @@
     position: relative;
     text-align: center;
     margin: 6px 0px;
-}
-
-.column1-employee {
-    width: 10%;
-}
-
-.column2-employee {
-    width: 12%;
-}
-
-.column3-employee {
-    width: 12%;
-}
-
-.column4-employee {
-    width: 20%;
-}
-
-.column6-employee {
-    width: 15%;
 }
 
 .table-name th{

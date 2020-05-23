@@ -1,19 +1,17 @@
 import React, { useState } from 'react';
 
 import dateFormat from 'dateformat';
-import AddEmployee from '../form-add-employee/form-add-employee';
-import ApiService from '../service/ApiService';
-import AddWorkLoad from '../components/AddWorkLoad/AddWorkLoad';
-import Tabs from '../tabs/tabs';
-import PrintTable from '../components/PrintTable/PrintTable';
-import PersonDetails from '../components/PersonDetails/PersonDetails.jsx';
+import AddEmployee from '../../form-add-employee/form-add-employee';
+import ApiService from '../../service/ApiService';
+import AddWorkLoad from '../AddWorkLoad/AddWorkLoad';
+import Tabs from '../../tabs/tabs';
+import PrintTable from '../PrintTable/PrintTable';
+import PersonDetails from '../PersonDetails/PersonDetails.jsx';
+import ModalWindow from '../../common/components/ModalWindow';
 
 import edit from './edit.png';
-import './employee-table.css';
-import ModalWindow from '../common/components/ModalWindow';
 
 const EmployeeTable = () =>  {
-
     const [currentItem, setCurrentItem] = useState(null);
     const [isModalOpen, setModal] = useState(false);
     const [total, setTotal] = useState(0);
@@ -37,15 +35,15 @@ const EmployeeTable = () =>  {
                 'ФИО', 'Факультет', 'Должность']}>
                 {(item) => (
                     <>  
-                        <td>
-                            <img src={edit} alt="" height="25"  width="25" onClick={() => onShowModal(item)}/>
-                        </td>
-                        <td>{item.employee_number}</td>
-                        <td>{dateFormat(item.employee_start, 'dd-mm-yyyy')}</td>
-                        <td>{dateFormat(item.employee_end, 'dd-mm-yyyy')}</td>
-                        <td>{item.employee_name}</td>
-                        <td>{item.employee_department}</td>
-                        <td>{item.employee_skill}</td>
+                    <td>
+                        <img src={edit} alt="" height="25"  width="25" onClick={() => onShowModal(item)}/>
+                    </td>
+                    <td>{item.employee_number}</td>
+                    <td>{dateFormat(item.employee_start, 'dd-mm-yyyy')}</td>
+                    <td>{dateFormat(item.employee_end, 'dd-mm-yyyy')}</td>
+                    <td>{item.employee_name}</td>
+                    <td>{item.employee_department}</td>
+                    <td>{item.employee_skill}</td>
                     </>
                 )}
         </PrintTable>

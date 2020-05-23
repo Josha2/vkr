@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+
 import propTypes from 'prop-types';
 import Pagination from '../Pagination';
 import SearchBar from '../SearchBar/SearchBar';
 
+import './PrintTable.css';
 
 const PrintTable = (props) => {
     const { getData, headerTitles, children, setTotal } = props;
@@ -78,7 +80,7 @@ const PrintTable = (props) => {
 
     return (
         <>
-            {setTotal(searchableData.length)}
+            {/* {setTotal(searchableData.length)} */}
             <SearchBar search={search}/>
             <table className="table-name">
                 <thead>
