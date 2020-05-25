@@ -11,6 +11,8 @@ export default class CreateDocument extends React.Component {
     static propTypes = {
         name: propTypes.string,
         position: propTypes.string,
+        contractNumber: propTypes.string,
+        contractStart: propTypes.string,
         multiplier: propTypes.number,
         lecturesHours: propTypes.any,
         seminarHours: propTypes.any,
@@ -107,7 +109,7 @@ export default class CreateDocument extends React.Component {
                                 size: 18,
                             }), 
                             new TextRun({
-                                text: (`№316/18 `),
+                                text: (`${this.props.contractNumber} `),
                                 underline: true,
                                 font: 'Times New Roman',
                                 size: 18,
@@ -118,7 +120,7 @@ export default class CreateDocument extends React.Component {
                                 size: 18,
                             }), 
                             new TextRun({
-                                text: (`09.01.2018г.`),
+                                text: (`${this.props.contractStart}г.`),
                                 underline: true,
                                 font: 'Times New Roman',
                                 size: 18,

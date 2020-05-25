@@ -2,7 +2,7 @@ import React from 'react';
 
 export const Card1 = ({show}) => {
     return (
-        <div class="col-sm-6">
+        <div className="col-sm-6">
             <div className="card" style={{'width': '31rem'}}>
                 <div className="card-body">
                     <h5 className="card-title">Отчёт</h5>
@@ -17,7 +17,7 @@ export const Card1 = ({show}) => {
 
 export const Card2 = () => {
     return (
-        <div class="col-sm-6">
+        <div className="col-sm-6">
             <div className="card" style={{'width': '31rem'}}>
                 <div className="card-body">
                     <h5 className="card-title">Справка</h5>

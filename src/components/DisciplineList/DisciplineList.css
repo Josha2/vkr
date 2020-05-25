@@ -16,9 +16,11 @@
     margin-bottom: 0.05rem;
 }
 
-.list-group-item {
-    border: 1px solid red;
+.selected > h5 {
+    color: #ffffff;
+    margin-bottom: 0.05rem;
 }
 
-
-
+.selected {
+    background-color: #4F9DDD;
+}

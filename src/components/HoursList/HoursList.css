@@ -1,0 +1,11 @@
+.list-group-item .badge-primary {
+    background-color: #4F9DDD;
+}
+
+.list-group-item .badge-pill {
+    padding: 0.65em 0.95rem;
+}
+
+.list-group-item .badge {
+    font-size: 75%;
+}

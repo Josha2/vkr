@@ -117,10 +117,10 @@ app.get('/employees/discipline/info', (req, res) => {
         else {
             return res.json({
                 data: results
-            })
+            });
         }
-    })
-})
+    });
+});
 
 //SELECT HISTORY TABLE
 app.get('/history', (req, res) => {
@@ -131,10 +131,12 @@ app.get('/history', (req, res) => {
         else {
             return res.json({
                 data: results
-            })
+            });
         }
-    })
-})
+    });
+});
+
+
 
 app.listen(4000, () => {
     console.log(`I LOVE RISITAS <3`)

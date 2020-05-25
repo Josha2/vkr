@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 import { MenuItem, Select, InputLabel } from '@material-ui/core';
 import EmployeeService from '../../service/ApiService';
-import Employee from '../../employee-data/employee-data';
+import CreateReport from '../CreateReport/CreateReport';
 import {Card1, Card2} from '../../common/components/Card';
 import styled from 'styled-components';
 
@@ -88,7 +88,7 @@ const SelectReport = () => {
 
     const employeeInfo = Object.keys(selectedEmployee).length === 0 
     ? null 
-    : <Employee selectedEmployee={selectedEmployee}/>
+    : <CreateReport selectedEmployee={selectedEmployee}/>
 
     return (
         <div className="container pt-2">
