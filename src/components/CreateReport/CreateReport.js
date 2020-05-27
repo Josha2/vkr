@@ -24,6 +24,7 @@ function CreateReport(props) {
 
     const [currentDiscipline, setCurrentDiscipline] = useState(null);
     const [hoursInfo, setHoursInfo] = useState([]);
+    // eslint-disable-next-line
     const [print, readyToPrint] = useState(false);
 
     const previousEmployeeName = usePrevious(employee_name);
@@ -32,12 +33,12 @@ function CreateReport(props) {
             readyToPrint(false);
         }
 
-    }, [previousEmployeeName, employee_name]);
+    }, [previousEmployeeName, employee_name, readyToPrint]);
 
     let arrayHours = hoursInfo.map(item => item.hours);
 
     const printDoc = useCallback(() => {
-        if(!print) {
+        if(hoursInfo.length === 0) {
             return null;
         }
         return (
@@ -58,7 +59,7 @@ function CreateReport(props) {
                 /> 
             </> 
         );
-    }, [arrayHours, employee_name, employee_skill, print]);
+    }, [arrayHours, employee_name, employee_skill, employee_number, employee_start, hoursInfo.length]);
     console.log(hoursInfo);
     return (
         <>

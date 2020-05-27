@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, memo } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import { InputLabel } from '@material-ui/core';
 import EmployeeService from '../../service/ApiService';
 import './DisciplineList.css';
@@ -41,8 +41,11 @@ const DisciplineList = (props) => {
 
     const showWarning = () => {
         return (
-            <div class="alert alert-warning" role="alert">
-                Дисциплины отсутствуют😢
+            <div className="alert alert-warning" role="alert">
+                Дисциплины отсутствуют
+                <span role="img">
+                    😢
+                </span>
             </div>
         );
     };
@@ -70,4 +73,4 @@ const DisciplineList = (props) => {
 };
 
 
-export default DisciplineList;
+export default memo(DisciplineList);

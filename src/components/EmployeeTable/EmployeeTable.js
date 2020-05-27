@@ -13,7 +13,7 @@ import edit from './edit.png';
 const EmployeeTable = () =>  {
     const [currentItem, setCurrentItem] = useState(null);
     const [isModalOpen, setModal] = useState(false);
-    const [total, setTotal] = useState(0);
+    const [setTotal] = useState(0);
 
     const onShowModal = (item) => {
         setCurrentItem(item);

@@ -18,8 +18,7 @@ const HoursList = (props) => {
     const { 
         employee_id, 
         discipline_id, 
-        throwBackHoursInfo,
-        readyToPrint
+        throwBackHoursInfo
     } = props;
 
     const [hoursInfo, setHoursInfo] = useState([]);
@@ -33,8 +32,7 @@ const HoursList = (props) => {
         });
         setHoursInfo(newArray);
         throwBackHoursInfo(newArray);
-        readyToPrint(true);
-    }, [setHoursInfo]);
+    }, [setHoursInfo, throwBackHoursInfo]);
 
     useEffect(() => {
         const fetch = async () => {
@@ -43,7 +41,7 @@ const HoursList = (props) => {
         };
 
         fetch();
-    }, [employee_id, discipline_id]);
+    }, [employee_id, discipline_id, insertDisciplineInfo]);
 
     const hoursInFoList = hoursInfo.map((item, i) => {
         return (

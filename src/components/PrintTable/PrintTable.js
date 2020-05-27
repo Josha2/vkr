@@ -21,7 +21,7 @@ const PrintTable = (props) => {
         };
 
         fetch();
-    }, []);
+    }, [getData]);
 
     const paginate = (currentPage) => {
         setCurrentPage(currentPage)

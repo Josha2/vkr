@@ -136,8 +136,36 @@ app.get('/history', (req, res) => {
     });
 });
 
-
+//UPDATE EMPLOYEE
+app.get('/employees/update/', (req, res) => {
+    const { 
+        employee_id,
+        employee_name, 
+        employee_skill,
+        employee_number, 
+        employee_start, 
+        employee_end  
+        
+    } = req.query;
+    const UPDATE_EMPLOYEE = `UPDATE employees
+                             SET employee_name = '${employee_name}',
+                             employee_skill = '${employee_skill}',
+                             employee_number = '${employee_number}',
+                             employee_start = '${employee_start}',
+                             employee_end = '${employee_end}'
+                             WHERE (employee_id = '${employee_id}')`
+    connection.query(UPDATE_EMPLOYEE, (err, results) => {
+        if(err) {
+            return res.send(err);
+        }
+        else {
+            return res.json({
+                data: results
+            });
+        }
+    });
+});
 
 app.listen(4000, () => {
-    console.log(`I LOVE RISITAS <3`)
+    console.log(`Connected`)
 });
