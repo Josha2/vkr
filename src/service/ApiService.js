@@ -53,13 +53,7 @@ const getDisciplines = async () => {
 };
 
 const updateEmployee = async (employee_name, employee_skill, employee_number, employee_start, employee_end, employee_id) => {
-    const result = await fetch(`http://localhost:4000/employees/update
-                                ?employee_name=${employee_name}
-                                &employee_skill=${employee_skill}
-                                &employee_number=${employee_number}
-                                &employee_start=${employee_start}
-                                &employee_end=${employee_end}
-                                &employee_id=${employee_id}`);
+    const result = await fetch(`http://localhost:4000/employees/update?employee_name=${employee_name}&employee_skill=${employee_skill}&employee_number=${employee_number}&employee_start=${employee_start}&employee_end=${employee_end}&employee_id=${employee_id}`);
     if(!result.ok) {
         throw new Error(`Could not fetch url, received ${result.status}`);
     };

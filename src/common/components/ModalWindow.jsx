@@ -14,12 +14,7 @@ const ModalWindow = (props) => {
             <Modal.Body>
                 {children}
             </Modal.Body>
-
-            <Modal.Footer>
-                <Button variant="secondary" onClick={onClose}>
-                    Отмена
-                </Button>
-            </Modal.Footer>
+            
         </Modal>
     )
 };

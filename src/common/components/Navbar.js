@@ -6,7 +6,7 @@ const NavBar = () => {
     return (
         <nav className="navbar navbar-dark navbar-expand-lg" style={{'backgroundColor': '#4F9DDD'}}>
             <div className="navbar-brand" style={{'fontSize': '32px'}}>
-                ОтчетностьDB
+                ОтчетностьDb
             </div>
             <ul className="navbar-nav">
                 <li className="nav-item">
