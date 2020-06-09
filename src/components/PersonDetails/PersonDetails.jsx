@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { withFormik } from 'formik';
 import styled from 'styled-components';
 import * as yup from 'yup';
-import { MenuItem, TextField, Button } from '@material-ui/core';
+import { MenuItem, Button } from '@material-ui/core';
 import dateFormat from 'dateformat';
 import DateFnsUtils from '@date-io/date-fns';
 import InputField from '../../common/components/controls/InputField';
@@ -145,6 +145,10 @@ const validationSchema = yup.object().shape({
         .string()
         .min(3, "ФИО слишком короткое")
         .max(45, "ФИО слишком длинное")
+        .required('Поле обязательно к заполнению'),
+    contractNumber: yup
+        .string()
+        .max(10, "Номер слишком длинный")
         .required('Поле обязательно к заполнению'),
 });
 

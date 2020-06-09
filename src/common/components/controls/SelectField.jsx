@@ -1,4 +1,4 @@
-import { InputLabel, MenuItem, Select } from '@material-ui/core';
+import { InputLabel, MenuItem, Select, FormControl } from '@material-ui/core';
 import React, { memo } from 'react';
 import withField from '../../../helpers/withField';
 
@@ -14,7 +14,7 @@ const SelectField = (props) => {
     } = props;
 
     return (
-        <>
+        <FormControl className="form-group">
             <InputLabel shrink id={labelId}>
                 {label}
             </InputLabel>
@@ -25,7 +25,7 @@ const SelectField = (props) => {
                 </MenuItem>
                 {items}
             </Select>
-        </>
+        </FormControl>
     )
 };
 

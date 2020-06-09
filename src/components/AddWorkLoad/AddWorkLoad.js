@@ -1,97 +1,76 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AlertContext } from '../../common/components/context/alert/alertContext';
+import { withFormik } from 'formik';
+import styled from 'styled-components';
+import { MenuItem, Button } from '@material-ui/core';
+import * as yup from 'yup';
+import InputField from '../../common/components/controls/InputField';
+import SelectField from '../../common/components/controls/SelectField';
 import EmployeeService from '../../service/ApiService';
 
-const mapAcademicHours = [
-    {
-        label: 'Лекции:',
-        value: 'lectures'
-    },
-    {
-        label: 'Семинарские/Практические:',
-        value: 'seminar'
-    },
-    {
-        label: 'Дипломные/Курсовые:',
-        value: 'diploma'
-    },
-    {
-        label: 'Зачеты:',
-        fovaluer: 'sets'
-    },
-    {
-        label: 'Экзамены:',
-        value: 'exams'
-    },
-    {
-        label: 'Консультации:',
-        value: 'consultations'
-    },
-    {
-        label: 'Другое:',
-        value: 'other'
-    },
-];
+const ContainerInfo = styled.div`
+    display: flex;
+    width: 950px; 
+    flex-grow: 1;
+    justify-content: center;
 
-const AddWorkLoad = () => {
+        .form-group {
+            width 450px;
+            margin: 0 15px;
+        }
+`;
+
+const ContainerHours = styled.div`
+    display: flex;
+`;
+
+const Text = styled.p`
+    margin: 25px 80px 25px 80px;
+`;
+
+const Form = styled.form`
+    ${EmployeeDetails} {
+        margin: 0 auto;
+    }
+
+`;
+
+const AddWorkLoad = (props) => {
+    const { isValid, handleSubmit } = props;
+
     const alert = useContext(AlertContext);
-
-    const defaultState = {
-        lectures: '',
-        seminar: '',
-        diploma: '',
-        sets: '',
-        exams: '',
-        consultations: '',
-        other: '',
-        disciplines: [],
-        employees: []
-    };
-
-    const [form, setForm] = useState(defaultState);
+    const [employees, setEmployees] = useState([]);
+    const [disciplines, setDisciplines] = useState([]);
 
     useEffect(() => {
         const fetch = async () => {
             const employees = await EmployeeService.getEmployees();
             const disciplines = await EmployeeService.getDisciplines();
-            setForm({...defaultState, employees, disciplines});
+            setEmployees(employees);
+            setDisciplines(disciplines);
         };
 
         fetch();
         // eslint-disable-next-line
     }, []);
 
-    const disciplinesList = form.disciplines.map((item) => {
+    const disciplinesList = disciplines.map((item) => {
         return (
-            <option key={item.discipline_id}>
+            <MenuItem 
+                key={item.discipline_id}
+                value={item.discipline_id}>
                 {item.discipline_name}
-            </option>
+            </MenuItem>
         );
     });
 
-    const employeesList = form.employees.map((item) => {
+    const employeesList = employees.map((item) => {
         return (
-            <option key={item.employee_id}>
+            <MenuItem 
+                key={item.employee_id}
+                value={item.employee_id}>
                 {item.employee_name}
-            </option>
-        );
-    });
-
-    const inputAcademicHours = mapAcademicHours.map((item, i) => {
-        return (
-            <div className="form-group row" key={i}>
-                <label htmlFor={item.value} className="col-sm-2 col-form-label">
-                    {item.label}
-                </label>
-                <div className="col-sm-10">
-                    <input
-                        type="text" 
-                        className="form-control form-control-sm"
-                        style={{width: 120}}
-                        id={item.value}
-                        onChange={(e) => setForm({...defaultState, [item.value]: e.target.value})}/>
-                </div>
-            </div>
+            </MenuItem>
         );
     });
 
@@ -101,47 +80,86 @@ const AddWorkLoad = () => {
     };
 
     return (
-        <form onSubmit={submitHandler}>
-            <div className="form-group pt-2">
-            <div className="form-group row">
-                    <label 
-                        htmlFor="employees" 
-                        className="col-3 col-form-label">
-                            Выберите сотрудника:
-                    </label>
-                    <select 
-                        className="form-control"
-                        id="employees"
-                        onChange={(e) => {}}>
-                            {employeesList}
-                    </select>
-                </div>
-
-                <div className="form-group row">
-                    <label 
-                        htmlFor="disciplines" 
-                        className="col-3 col-form-label">
-                            Выберите учебную дисциплину:
-                    </label>
-                    <select 
-                        className="form-control"
-                        id="disciplines"
-                        onChange={(e) => {}}>
-                            {disciplinesList}
-                    </select>
-                </div>
-                <label className="col-form-label">
-                        Введите часы:
-                </label>
-                {inputAcademicHours}
-                <button  
-                    onSubmit={submitHandler}
-                    className="btn btn-primary">
-                        Добавить
-                </button>
-                </div>
-        </form>
+        <Form onSubmit={handleSubmit} className="mt-2">
+            <Text> 
+                Выберите сотрудника
+            </Text>
+            <ContainerInfo>
+                <SelectField
+                    name="employeeId"    
+                    label="Сотрудник"
+                    labelId="employee simple-select-helper-label"
+                    id="employee simple-select-helper"
+                    items={employeesList}
+                    />
+                <SelectField
+                    name="disciplineId"    
+                    label="Дисциплина"
+                    labelId="discipline simple-select-helper-label"
+                    id="discipline simple-select-helper"
+                    items={disciplinesList}
+                />
+            </ContainerInfo>
+            <ContainerHours>
+                <InputField
+                    name="lectures"
+                    label="Лекции"
+                />
+                <InputField
+                    name="seminar"
+                    label="Семинарские (практические) занятия"
+                />
+                <InputField
+                    name="diploma"
+                    label="Дипломные (курсовые) работы"
+                />
+                <InputField
+                    name="sets"
+                    label="Зачеты"
+                />
+                <InputField
+                    name="exams"
+                    label="Экзамены"
+                />
+                <InputField
+                    name="consultations"
+                    label="Консультации"
+                />
+                <InputField
+                    name="other"
+                    label="Другая учебная работа"
+                />
+            </ContainerHours>
+            <div className="d-flex justify-content-end">
+                <Button
+                    type="submit" 
+                    variant="contained" 
+                    color="primary"
+                    onSubmit={handleSubmit}>
+                    Подтвердить
+                </Button>
+            </div>
+        </Form>
     );
 };
 
-export default AddWorkLoad;
+const initialValues = {
+    employeeId: '',
+    disciplineId: '',
+    lectures: '',
+    seminar: '',
+    diploma: '',
+    sets: '',
+    exams: '',
+    consultations: '',
+    other: '',
+};
+
+const AddWorkLoadForm = withFormik({
+    mapPropsToValues: () => (initialValues),
+    handleSubmit: (initialValues) => {
+        console.log(initialValues);
+    }
+})(AddWorkLoad);
+
+export default AddWorkLoadForm;

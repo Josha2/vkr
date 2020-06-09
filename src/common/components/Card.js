@@ -1,13 +1,21 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-export const Card1 = ({show}) => {
+export const Card1 = () => {
     return (
         <div className="col-sm-6">
             <div className="card" style={{'width': '31rem'}}>
                 <div className="card-body">
                     <h5 className="card-title">Отчёт</h5>
                     <p className="card-text">Дополнительное соглашение с преподавателем ТГУ</p>
-                    <button className="btn btn-primary" onClick={show}>Создать</button>
+                    <Link 
+                        className="nav-link" 
+                        to="reports/report1">
+                        <button 
+                            className="btn btn-primary">
+                            Создать
+                        </button>
+                    </Link>
                 </div>
             </div>
         </div>

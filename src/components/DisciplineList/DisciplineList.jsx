@@ -40,14 +40,18 @@ const DisciplineList = (props) => {
     });
 
     const showWarning = () => {
-        return (
-            <div className="alert alert-warning" role="alert">
-                Дисциплины отсутствуют
-                <span role="img">
-                    😢
-                </span>
-            </div>
-        );
+        if (disciplines.length === 0 && employee_name){
+            return (
+                <div className="alert alert-warning" role="alert">
+                    Дисциплины отсутствуют
+                    <span role="img">
+                        😢
+                    </span>
+                </div>
+            )
+        } else {
+            return null
+        }
     };
 
     const showList = () => {
@@ -63,11 +67,12 @@ const DisciplineList = (props) => {
         );
     };
 
-    const showContent = disciplines.length === 0 ? showWarning() : showList();
+    const showContent = !employee_name ? null : showList();
 
     return (
         <div>
             { showContent }
+            { showWarning() }
         </div>
     );
 };

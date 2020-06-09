@@ -1,99 +1,19 @@
-import React, { useState, useEffect, useCallback } from 'react';
-
-import { MenuItem, Select, InputLabel } from '@material-ui/core';
-import EmployeeService from '../../service/ApiService';
-import CreateReport from '../CreateReport/CreateReport';
+import React from 'react';
 import {Card1, Card2} from '../../common/components/Card';
-import styled from 'styled-components';
+import MultipleReports from '../MultipleReports/MultipleReports';
+import CreateReport from '../CreateReport/CreateReport';
 
-const FormGroup = styled.div`
-    width: 60%;
-`;
 
 const SelectReport = () => {
-    const [employees, setEmployees] = useState([]);
-    const [selectedEmployee, setSelectedEmployee] = useState({});
-    const [page, setPage] = useState('Main');
-
-    useEffect(() => {
-        EmployeeService
-            .getEmployees()
-            .then((data) => {
-                setEmployees(data);
-            });
-    }, [setEmployees]);
-  
-    const renderItems = useCallback((arr) => {
-        return arr.map((item) => {
-            return (
-                <MenuItem 
-                    key={item.employee_id}
-                    value={item.employee_name}>
-                    {item.employee_name}
-                </MenuItem>
-            );
-        });
-    }, []);
-
-    const selectEmployee = useCallback((e) => {
-        EmployeeService
-            .getEmployee(e.target.value)
-            .then((selectedEmployee) => setSelectedEmployee(selectedEmployee));
-    }, [setSelectedEmployee]);
-
-    const employeesList = renderItems(employees);
-
-    const showAll = () => {
-        return (
-            <div className="row">
-                <Card1 show={() => setPage('Card1')}/>
-                <Card2/>
-            </div>
-        );
-    };
-
-    const showEmployeeList = () => {
-        let { employee_name } = employees[0];
-        return (
-            <FormGroup className="form-group">
-                <InputLabel id="employee-simple-select-outlined-label">
-                    Сотрудник:
-                </InputLabel>
-                <Select
-                    fullWidth
-                    onChange={selectEmployee}
-                    labelId="employee-simple-select-outlined-label"
-                    id="employee-simple-select-outlined"
-                    name="employee"
-                    value={selectedEmployee.employee_name ?? employee_name}
-                >
-                    {employeesList}
-                </Select>
-          </FormGroup>
-        );
-    };
-
-    let mainpage = null;
-
-    switch (page) {
-        case 'Main':
-            mainpage = showAll();
-            break;
-        case 'Card1':
-            mainpage = showEmployeeList();
-            break;
-        default:
-            break;
-    };
-
-    const employeeInfo = Object.keys(selectedEmployee).length === 0 
-    ? null 
-    : <CreateReport selectedEmployee={selectedEmployee}/>
 
     return (
         <div className="container pt-2">
-            {mainpage}
-            {employeeInfo}
+            {/* <div className="row">
+                <Card1/>
+                <Card2/>
+            </div> */}
+            <MultipleReports/>
+            {/* <CreateReport/> */}
         </div>
     );
 };

@@ -10,17 +10,27 @@ const NavBar = () => {
             </div>
             <ul className="navbar-nav">
                 <li className="nav-item">
-                    <NavLink className="nav-link" style={{'fontSize': '24px'}} to="/" exact>
+                    <NavLink 
+                        className="nav-link" 
+                        style={{'fontSize': '24px'}} 
+                        to="/" 
+                        exact>
                         Сотрудники
                     </NavLink>
                 </li>
                 <li className="nav-item">
-                    <NavLink className="nav-link" style={{'fontSize': '24px'}} to="/reports">
+                    <NavLink 
+                        className="nav-link" 
+                        style={{'fontSize': '24px'}} 
+                        to="/reports">
                         Создать отчёт
                     </NavLink>
                 </li>
                 <li className="nav-item">
-                    <NavLink className="nav-link" style={{'fontSize': '24px'}} to="/history">
+                    <NavLink 
+                        className="nav-link" 
+                        style={{'fontSize': '24px'}} 
+                        to="/history">
                         История
                     </NavLink>
                 </li>
