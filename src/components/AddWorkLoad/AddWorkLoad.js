@@ -10,10 +10,9 @@ import EmployeeService from '../../service/ApiService';
 
 const ContainerInfo = styled.div`
     display: flex;
-    width: 950px; 
     flex-grow: 1;
     justify-content: center;
-
+    padding: 35px 0;
         .form-group {
             width 450px;
             margin: 0 15px;
@@ -22,18 +21,40 @@ const ContainerInfo = styled.div`
 
 const ContainerHours = styled.div`
     display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+
+    input[type="text"] {
+        width: 185px;
+    }
+
+    div {
+        margin: 10px 5px 10px 0px;
+    }
 `;
 
 const Text = styled.p`
-    margin: 25px 80px 25px 80px;
+    margin: 15px 0px;
+    padding-bottom: 10px;
+    color: rgb(79, 157, 221);
+    border-bottom: 1px solid #dee2e6;
 `;
 
 const Form = styled.form`
-    ${EmployeeDetails} {
+    ${ContainerInfo} {
         margin: 0 auto;
     }
+    ${ContainerHours} {
+        padding: 0 75px 15px 75px;
+        border-bottom: 1px solid #dee2e6;
+    }
 
+    button[type="submit"] {
+        background: rgb(79, 157, 221);
+        margin: 25px 75px;
+    }
 `;
+
 
 const AddWorkLoad = (props) => {
     const { isValid, handleSubmit } = props;
@@ -84,7 +105,7 @@ const AddWorkLoad = (props) => {
             <Text> 
                 Выберите сотрудника
             </Text>
-            <ContainerInfo>
+            <ContainerInfo className="mb-2">
                 <SelectField
                     name="employeeId"    
                     label="Сотрудник"
@@ -100,45 +121,53 @@ const AddWorkLoad = (props) => {
                     items={disciplinesList}
                 />
             </ContainerInfo>
+            <Text> 
+                Введите часы:
+            </Text>
             <ContainerHours>
                 <InputField
                     name="lectures"
                     label="Лекции"
+                    variant="outlined"
                 />
                 <InputField
                     name="seminar"
-                    label="Семинарские (практические) занятия"
+                    label="Семинарские занятия"
+                    variant="outlined"
                 />
                 <InputField
                     name="diploma"
-                    label="Дипломные (курсовые) работы"
+                    label="Дипломные работы"
+                    variant="outlined"
                 />
                 <InputField
                     name="sets"
                     label="Зачеты"
+                    variant="outlined"
                 />
                 <InputField
                     name="exams"
                     label="Экзамены"
+                    variant="outlined"
                 />
                 <InputField
                     name="consultations"
                     label="Консультации"
+                    variant="outlined"
                 />
                 <InputField
                     name="other"
                     label="Другая учебная работа"
+                    variant="outlined"
                 />
             </ContainerHours>
-            <div className="d-flex justify-content-end">
-                <Button
-                    type="submit" 
-                    variant="contained" 
-                    color="primary"
-                    onSubmit={handleSubmit}>
-                    Подтвердить
-                </Button>
-            </div>
+            <Button
+                type="submit" 
+                variant="contained" 
+                color="primary"
+                onSubmit={handleSubmit}>
+                Подтвердить
+            </Button>
         </Form>
     );
 };
