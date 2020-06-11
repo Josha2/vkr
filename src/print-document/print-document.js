@@ -1,12 +1,26 @@
 import React from 'react';
 import propTypes from 'prop-types';
 import fs from 'file-saver';
-import numberToLetters from './numberToLetters';
 import { Document, Packer, Paragraph, TextRun, AlignmentType, HeadingLevel, Table, TableCell, TableRow, WidthType } from "docx";
- 
+import GetAppIcon from '@material-ui/icons/GetApp';
+import styled from 'styled-components';
+const rubles = require('rubles').rubles;
+
+const CustomDownloadIcon = styled(GetAppIcon)`
+    color: rgba(79, 157, 221, 1);
+    margin-top: 12px;
+    cursor: pointer;
+`;
+
+
 export default class CreateDocument extends React.Component {
 
     doc = new Document();
+
+    numberToLetters = (number) => {
+        const text = rubles(number);
+        return ('(' + text.charAt(0).toUpperCase() + text.substring(1)).replace(/^(.*?)\s(\S*)$/,'$1) $2');
+    }
 
     static propTypes = {
         name: propTypes.string,
@@ -235,7 +249,7 @@ export default class CreateDocument extends React.Component {
                                 size: 18,
                             }), 
                             new TextRun({
-                                text: `${numberToLetters(this.total)}`,
+                                text: `${this.numberToLetters(this.total)}`,
                                 underline: true,
                                 italics: true,
                                 font: 'Times New Roman',
@@ -258,7 +272,7 @@ export default class CreateDocument extends React.Component {
                                 size: 18,
                             }), 
                             new TextRun ({
-                                text: `${numberToLetters(this.total)}`,
+                                text: `${this.numberToLetters(this.total)}`,
                                 underline: true,
                                 italics: true,
                                 font: 'Times New Roman',
@@ -1108,12 +1122,10 @@ export default class CreateDocument extends React.Component {
     
     render(){
         return (
-            <div>
-                <button className="btn btn-primary" 
-                        onClick={this.printDocument}>
-                        Создать отчёт
-                </button>
-            </div>
+                <CustomDownloadIcon 
+                    fontSize="default" 
+                    onClick={this.printDocument}
+                />
         );
     };
 };

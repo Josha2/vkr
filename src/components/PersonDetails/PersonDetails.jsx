@@ -79,6 +79,7 @@ const PersonDetailsLayout = (props) => {
                                 labelId="simple-select-helper-label"
                                 id="simple-select-helper"
                                 items={menuItems}
+                                initialValue
                             />
                         </li>
                         <li className="list-group-item">
@@ -145,11 +146,11 @@ const validationSchema = yup.object().shape({
         .string()
         .min(3, "ФИО слишком короткое")
         .max(45, "ФИО слишком длинное")
-        .required('Поле обязательно к заполнению'),
+        .required("Поле обязательно к заполнению"),
     contractNumber: yup
         .string()
         .max(10, "Номер слишком длинный")
-        .required('Поле обязательно к заполнению'),
+        .required("Поле обязательно к заполнению"),
 });
 
 const PersonDetailsForm = withFormik({
@@ -163,7 +164,7 @@ const PersonDetailsForm = withFormik({
                 contractNumber, 
                 dateFormat(dateStart, 'yyyy-mm-dd'), 
                 dateFormat(dateEnd, 'yyyy-mm-dd'), 
-                id)
+                id);
     }
 })(PersonDetailsLayout);
 

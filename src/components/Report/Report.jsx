@@ -12,7 +12,15 @@ import { MenuItem, Select, InputLabel, FormGroup } from '@material-ui/core';
 import styled from 'styled-components';
 import {usePrevious} from '../../helpers/usePrevious';
 import ReportTable from '../ReportTable/ReportTable';
+import CreateDocument from '../../print-document/print-document';
+import dateFormat from 'dateformat';
 
+const mapHoursToMultiplier = {
+    'ассистент': 150,
+    'старший преподаватель': 300,
+    'доцент': 450,
+    'профессор': 600,
+};
 const CustomFormControl = styled(FormControl)`
     width: 350px;
 `;
@@ -26,14 +34,14 @@ const CustomLabel = styled(InputLabel)`
 `;
 
 const CustomDeleteIcon = styled(DeleteIcon)`
-    color: rgba(0, 0, 0, 0.54);
+    color: rgba(79, 157, 221, 1);
     margin-left: 15px;
     margin-top: 8px;
     cursor: pointer;
 `;
 
 const CustomDownloadIcon = styled(GetAppIcon)`
-    color: rgba(0, 0, 0, 0.10);
+    color: rgba(79, 157, 221, 0.50);
     margin-top: 12px;
     cursor: pointer;
 `;
@@ -41,7 +49,7 @@ const CustomDownloadIcon = styled(GetAppIcon)`
 const FormContent = styled.div`
     display: flex;
     min-width: 985px;
-
+    
 `;
 
 const SelectInputs = styled.div`
@@ -55,7 +63,9 @@ const ActionIcons = styled.div`
 `;
 
 
-const Report = () => {
+const Report = (props) => {
+    const { panelId, deleteItem } = props;
+    const [expanded, setExpanded] = useState(''); 
     const [employees, setEmployees] = useState([]);
     const [currentEmployee, setCurrentEmployee]= useState({});
     const [disciplines, setDisciplines] = useState([]);
@@ -95,6 +105,10 @@ const Report = () => {
             </MenuItem>
         );
     });
+
+    const handleChange = (panel) => (event, newExpanded) => {
+        setExpanded(newExpanded ? panel : false);
+    };
 
     const employeesList = () => {
         return (
@@ -138,12 +152,6 @@ const Report = () => {
         );
     });
     const disciplineList = () => {
-        // let currentValue = '';
-        // if(employee_name !== '' && disciplines.length === 0){
-        //     currentValue = 'Дисциплины отсутствуют😢'
-        // } else {
-        //     currentValue = currentDiscipline
-        // }
         return (
             <FormControl className="form-group" style={{width: 350}}>
                 <InputLabel id="discipline-simple-select-label">
@@ -169,26 +177,40 @@ const Report = () => {
 
     }, [previousEmployeeName, employee_name]);
 
-    const hasContent = hoursInfo.length === 0 ? false : true;
-
-    const expandIcon = hoursInfo.length === 0
-        ? <ExpandMoreIcon 
-            style={{
-                color: 'rgba(0, 0, 0, 0.10)',
-                cursor: 'auto',
-            }}
-            onClick={(e) => e.stopPropagation()}
-            onFocus={(e) => e.stopPropagation()}
-            />
-        : <ExpandMoreIcon/>;
+    let arrayHours = hoursInfo.map(item => item.hours);
+    const printDoc = useCallback(() => {
+        
+        if(hoursInfo.length === 0) {
+            return <CustomDownloadIcon fontSize="default" />
+        }
+        return (
+            <>
+                <CreateDocument 
+                    name={employee_name}
+                    position={employee_skill}
+                    contractNumber={employee_number}
+                    contractStart={dateFormat(employee_start, 'dd.mm.yyyy')}
+                    multiplier={mapHoursToMultiplier[employee_skill]}
+                    lecturesHours={arrayHours[0] ?? ''}
+                    seminarHours={arrayHours[1] ?? ''}
+                    diplomaHours={arrayHours[2] ?? ''}
+                    setsHours={arrayHours[3] ?? ''}
+                    examsHours={arrayHours[4] ?? ''}
+                    consultationHours={arrayHours[5] ?? ''}
+                    otherHours={arrayHours[6] ?? ''}
+                /> 
+            </> 
+        );
+        
+    }, [arrayHours, employee_name, employee_skill, employee_number, employee_start, hoursInfo.length]);
 
     return (
-        <ExpansionPanel>
+        <ExpansionPanel expanded={expanded === `panel${panelId}`} onChange={handleChange(`panel${panelId}`)}>
             <ExpansionPanelSummary
-                expandIcon={expandIcon}
+                expandIcon={<ExpandMoreIcon/>}
                 aria-label="Expand"
-                aria-controls="additional-actions1-content"
-                id="additional-actions1-header"
+                aria-controls={`panel${panelId}-content`}
+                id={`panel${panelId}-header`}
             >
                 <FormContent>
                     <SelectInputs>
@@ -207,14 +229,15 @@ const Report = () => {
                         <FormControlLabel
                             onClick={(e) => e.stopPropagation()}
                             onFocus={(e) => e.stopPropagation()}
-                            control={<CustomDownloadIcon fontSize="medium"/>}
+                            control={printDoc()}
                         />
                         <FormControlLabel
                             onClick={(e) => e.stopPropagation()}
                             onFocus={(e) => e.stopPropagation()}
-                            control={<CustomDeleteIcon fontSize="medium"/>}
+                            control={<CustomDeleteIcon fontSize="default" onClick={() => deleteItem(panelId)}/>}
                         />
                     </ActionIcons>
+                    <p>{panelId}</p>
                 </FormContent>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>

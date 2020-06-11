@@ -15,7 +15,10 @@ const Content = styled.div`
     border-bottom: 1px solid #c9c9c9;
     margin-bottom: 10px;
     > button {
-        margin: 10px 0;
+        margin: 10px 0; 
+        :focus { 
+            outline: none; 
+        }
     }
 `;
 
@@ -23,29 +26,37 @@ const ReportCard= styled.div`
     padding-bottom: 10px;
 `;
 
-const MultipleReports = () => {
-    const [currentId, setCurrentId] = useState(0);
+const ReportList = () => {
+    const [currentId, setCurrentId] = useState(1);
+    const [reportList, setReportList] = useState([]); 
 
-    const [reportList, setReportList] = useState([{id: 0, content: Report}]);
-    
+    const deleteItem = (id) => {
+        const index = reportList.findIndex((item) => item.id === id);
+        console.log(index);
+    };
+
     const createItem = () => {
+        setCurrentId(currentId + 1);
         return {
-            id: setCurrentId(currentId + 1),
-            content: Report
+            id: currentId,
+            content: <Report 
+                        panelId={currentId}
+                        deleteItem={deleteItem}/>
         };
+
     };
 
     const addItem = useCallback(() => {
         setReportList([...reportList, createItem()]);
     });
 
+
     const renderReportList = () => {
         return reportList.map((item, i) => {
-            const Component = item.content;
             return (
                 <ReportCard 
                     key={i}>
-                    <Component />
+                    {item.content}
                 </ReportCard>
             );
         });
@@ -72,4 +83,4 @@ const MultipleReports = () => {
     );
 };
 
-export default MultipleReports;
+export default ReportList;

@@ -70,7 +70,6 @@ function CreateReport() {
     }, [setCurrentEmployee]);
 
     const employeesList = () => {
-        console.log(employees[0]);
         return (
             <FormGroup className="form-group">
                 <InputLabel id="employee-simple-select-outlined-label">
@@ -118,7 +117,7 @@ function CreateReport() {
         );
         
     }, [arrayHours, employee_name, employee_skill, employee_number, employee_start, hoursInfo.length]);
-
+    console.log(arrayHours);
     return (
         <>
             {employeesList()}

@@ -9,10 +9,10 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
 const mapHoursToMultiplier = {
-    'ассистент': 180,
-    'старший преподаватель': 280,
-    'доцент': 380,
-    'профессор': 480,
+    'ассистент': 150,
+    'старший преподаватель': 300,
+    'доцент': 450,
+    'профессор': 600,
 };
 
 const mapAcademicTypeLoadToDescription = {
@@ -97,7 +97,6 @@ const ReportTable = (props) => {
 
     const showContent = hoursInfo.length === 0 ? null : showTable();
     
-    console.log(hoursInfo);
     return (
         <>
         {showContent}

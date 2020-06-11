@@ -57,8 +57,13 @@ const updateEmployee = async (employee_name, employee_skill, employee_number, em
     if(!result.ok) {
         throw new Error(`Could not fetch url, received ${result.status}`);
     };
-    const body = await result.json();
-    return body.data;
+};
+
+const insertDisciplineHours = async (employee_id, discipline_id, lectures, seminar, diploma, sets, exams, consultations, other) => {
+    const result = await fetch(`http://localhost:4000/employees/discipline/add?employee_id=${employee_id}&discipline_id=${discipline_id}&lectures=${lectures}&seminar=${seminar}&diploma=${diploma}&sets=${sets}&exams=${exams}&consultations=${consultations}&other=${other})`);
+    if(!result.ok) {
+        throw new Error(`Could not fetch url, received ${result.status}`);
+    };
 };
 
 export default {
@@ -68,5 +73,6 @@ export default {
     getDiscipline,
     getDisciplineInfo,
     getDisciplines,
-    updateEmployee
+    updateEmployee,
+    insertDisciplineHours
 };

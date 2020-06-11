@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, memo } from 'react';
 import { AlertContext } from '../../common/components/context/alert/alertContext';
 import { withFormik } from 'formik';
 import styled from 'styled-components';
@@ -53,6 +53,10 @@ const Form = styled.form`
         background: rgb(79, 157, 221);
         margin: 25px 75px;
     }
+
+    button[type="submit"]:focus { 
+        outline: none; 
+    }
 `;
 
 
@@ -95,7 +99,7 @@ const AddWorkLoad = (props) => {
         );
     });
 
-    const submitHandler = e => {
+    const showAlert = e => {
         e.preventDefault();
         alert.show(' Учебная нагрузка успешно добавлена!', 'success');
     };
@@ -107,17 +111,17 @@ const AddWorkLoad = (props) => {
             </Text>
             <ContainerInfo className="mb-2">
                 <SelectField
-                    name="employeeId"    
+                    name="employee_id"    
                     label="Сотрудник"
-                    labelId="employee simple-select-helper-label"
+                    labelId="employee-simple-select-helper-label"
                     id="employee simple-select-helper"
                     items={employeesList}
                     />
                 <SelectField
-                    name="disciplineId"    
+                    name="discipline_id"    
                     label="Дисциплина"
-                    labelId="discipline simple-select-helper-label"
-                    id="discipline simple-select-helper"
+                    labelId="discipline-simple-select-helper-label"
+                    id="discipline-simple-select-helper"
                     items={disciplinesList}
                 />
             </ContainerInfo>
@@ -173,8 +177,8 @@ const AddWorkLoad = (props) => {
 };
 
 const initialValues = {
-    employeeId: '',
-    disciplineId: '',
+    employee_id: '',
+    discipline_id: '',
     lectures: '',
     seminar: '',
     diploma: '',
@@ -184,11 +188,62 @@ const initialValues = {
     other: '',
 };
 
+const noMoreThanThreeDigit = "Максимум трёхзначное значение";
+const mustBeNumber = "Допустимы только цифры";
+const mustBeFilled = "Поле обязательно к заполнению";
+
+const validationSchema = yup.object().shape({
+    employee_id: yup
+        .string()
+        .required(mustBeFilled),
+    discipline_id: yup
+        .string()
+        .required(mustBeFilled),
+    lectures: yup
+        .number()
+        .typeError(mustBeNumber)
+        .max(999, noMoreThanThreeDigit),
+    seminar: yup
+        .number()
+        .typeError(mustBeNumber)
+        .max(999, noMoreThanThreeDigit),
+    diploma: yup
+        .number()
+        .typeError(mustBeNumber)
+        .max(999, noMoreThanThreeDigit),
+    sets: yup
+        .number()
+        .typeError(mustBeNumber)
+        .max(999, noMoreThanThreeDigit),
+    exams: yup
+        .number()
+        .typeError(mustBeNumber)
+        .max(999, noMoreThanThreeDigit),
+    consultations: yup
+        .number()
+        .typeError(mustBeNumber)
+        .max(999, noMoreThanThreeDigit),
+    other: yup
+        .number()
+        .typeError(mustBeNumber)
+        .max(999, noMoreThanThreeDigit),
+})
+
 const AddWorkLoadForm = withFormik({
     mapPropsToValues: () => (initialValues),
-    handleSubmit: (initialValues) => {
-        console.log(initialValues);
+    validationSchema,
+    handleSubmit: ({
+        employee_id, discipline_id, lectures,
+        seminar, diploma, sets,
+        exams, consultations, other
+    }) => {
+        EmployeeService
+            .insertDisciplineHours(
+                employee_id, discipline_id, lectures,
+                seminar, diploma, sets,
+                exams, consultations, other);
     }
 })(AddWorkLoad);
 
-export default AddWorkLoadForm;
+export default memo(AddWorkLoadForm);
+

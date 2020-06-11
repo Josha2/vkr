@@ -166,6 +166,32 @@ app.get('/employees/update/', (req, res) => {
     });
 });
 
+//INSERT DISCIPLINES HOURS
+app.get('/employees/discipline/add', (req, res) => {
+    const { employee_id, discipline_id, lectures, seminar, diploma, sets, exams, consultations, other} = req.query;
+    const INSERT_DICIPLINE_INFO = `INSERT INTO employees_discipline
+                                   VALUES (
+                                    ${employee_id},
+                                    ${discipline_id},
+                                    ${lectures},
+                                    ${seminar},
+                                    ${diploma},
+                                    ${sets},
+                                    ${exams},
+                                    ${consultations},
+                                    ${other})`
+    connection.query(INSERT_DICIPLINE_INFO, (err, results) => {
+        if(err) {
+            return res.send(err);
+        }
+        else {
+            return res.json({
+                data: results
+            });
+        }
+    });
+});
+
 app.listen(4000, () => {
     console.log(`Connected`)
 });
