@@ -27,6 +27,7 @@ export default class CreateDocument extends React.Component {
         position: propTypes.string,
         contractNumber: propTypes.string,
         contractStart: propTypes.string,
+        disciplineName: propTypes.string,
         multiplier: propTypes.number,
         lecturesHours: propTypes.any,
         seminarHours: propTypes.any,
@@ -213,7 +214,7 @@ export default class CreateDocument extends React.Component {
                                 size: 18,
                             }),
                             new TextRun({
-                                text: 'Infromation security:',
+                                text: `${this.props.disciplineName}:`,
                                 font: 'Times New Roman',
                                 size: 18,
                                 italics: true,

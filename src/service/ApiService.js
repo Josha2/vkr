@@ -34,6 +34,15 @@ const getDiscipline = async (name) => {
     return body.data;
 };
 
+const getDisciplineName = async (id) => {
+    const result = await fetch(`http://localhost:4000/disciplines/discipline?discipline_id=${id}`);
+    if(!result.ok) {
+        throw new Error(`Could not fetch url, received ${result.status}`);
+    };
+    const body = await result.json();
+    return body.data;
+};
+
 const getDisciplineInfo = async (id_e, id_d) => {
     const result = await fetch(`http://localhost:4000/employees/discipline/info?employee_id=${id_e}&discipline_id=${id_d}`);
     if(!result.ok) {
@@ -59,12 +68,25 @@ const updateEmployee = async (employee_name, employee_skill, employee_number, em
     };
 };
 
-const insertDisciplineHours = async (employee_id, discipline_id, lectures, seminar, diploma, sets, exams, consultations, other) => {
-    const result = await fetch(`http://localhost:4000/employees/discipline/add?employee_id=${employee_id}&discipline_id=${discipline_id}&lectures=${lectures}&seminar=${seminar}&diploma=${diploma}&sets=${sets}&exams=${exams}&consultations=${consultations}&other=${other})`);
+const insertEmployee = async (employee_name, employee_skill, employee_department, employee_start, employee_end, employee_number) => {
+    const result = await fetch(`http://localhost:4000/employees/add?employee_name=${employee_name}&employee_skill=${employee_skill}&employee_department=${employee_department}&employee_start=${employee_start}&employee_end=${employee_end}&employee_number=${employee_number}`);
     if(!result.ok) {
         throw new Error(`Could not fetch url, received ${result.status}`);
     };
+    const body = await result.json();
+    return body.data;
 };
+
+const insertDisciplineHours = async (employee_id, discipline_id, lectures, seminar, diploma, sets, exams, consultations, other) => {
+    const result = await fetch(`http://localhost:4000/employees/discipline/add?employee_id=${employee_id}&discipline_id=${discipline_id}&lectures=${lectures}&seminar=${seminar}&diploma=${diploma}&sets=${sets}&exams=${exams}&consultations=${consultations}&other=${other}`);
+    if(!result.ok) {
+        throw new Error(`Could not fetch url, received ${result.status}`);
+    };
+    const body = await result.json();
+    return body.data;
+};
+
+
 
 export default {
     getEmployees,
@@ -74,5 +96,7 @@ export default {
     getDisciplineInfo,
     getDisciplines,
     updateEmployee,
-    insertDisciplineHours
+    insertDisciplineHours,
+    insertEmployee,
+    getDisciplineName
 };

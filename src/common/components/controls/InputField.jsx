@@ -6,11 +6,13 @@ const InputField = (props) => {
     const { children, form, field, errors, ...rest } = props;
 
     const error = form.errors[field.name];
+    
     return (
         <>
             <TextField 
-                {...field} 
-                {...rest} 
+                {...field}
+                value={field.value ?? ''} 
+                {...rest}
                 error={!!error}
                 helperText={error}
              />

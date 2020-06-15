@@ -1,23 +1,19 @@
 import React, { useContext, useEffect, useState, memo } from 'react';
-import { AlertContext } from '../../common/components/context/alert/alertContext';
 import { withFormik } from 'formik';
 import styled from 'styled-components';
-import { MenuItem, Button } from '@material-ui/core';
 import * as yup from 'yup';
+import { MenuItem, Button } from '@material-ui/core';
 import InputField from '../../common/components/controls/InputField';
 import SelectField from '../../common/components/controls/SelectField';
 import EmployeeService from '../../service/ApiService';
 
 const ContainerInfo = styled.div`
     display: flex;
-    flex-grow: 1;
     justify-content: center;
-    padding-top: 15px;
-    padding-bottom: 35px;
-        .form-group {
-            width 450px;
-            margin: 0 15px;
-        }
+    .form-group {
+        width: 350px;
+        margin-bottom: 25px;
+    }
 `;
 
 const ContainerHours = styled.div`
@@ -30,56 +26,27 @@ const ContainerHours = styled.div`
     }
 
     div {
-        margin: 10px 5px 10px 0px;
+        margin: 5px;
     }
-`;
-
-const Text = styled.p`
-    margin: 15px 0px;
-    padding-bottom: 10px;
-    color: rgb(79, 157, 221);
-    border-bottom: 1px solid #dee2e6;
 `;
 
 const Form = styled.form`
-    ${ContainerInfo} {
+   ${ContainerInfo} {
         margin: 0 auto;
-    }
-    ${ContainerHours} {
-        padding: 0 75px 15px 75px;
-        border-bottom: 1px solid #dee2e6;
-    }
+   }
 
-    button[type="submit"] {
-        background: rgb(79, 157, 221);
-        margin: 25px 75px;
-    }
+   button[type="submit"] {
+    background: rgb(79, 157, 221);
+    margin: 15px 11px;
+}
 
-    button[type="submit"]:focus { 
-        outline: none; 
-    }
+button[type="submit"]:focus { 
+    outline: none; 
+}
 `;
 
-
-const AddWorkLoad = (props) => {
-    const { isValid, handleSubmit } = props;
-
-    const alert = useContext(AlertContext);
-    const [employees, setEmployees] = useState([]);
-    const [disciplines, setDisciplines] = useState([]);
-
-    useEffect(() => {
-        const fetch = async () => {
-            const employees = await EmployeeService.getEmployees();
-            const disciplines = await EmployeeService.getDisciplines();
-            setEmployees(employees);
-            setDisciplines(disciplines);
-        };
-
-        fetch();
-        // eslint-disable-next-line
-    }, []);
-
+const PersonHours = (props) => {
+    const { isValid, handleSubmit, disciplines } = props;
     const disciplinesList = disciplines.map((item) => {
         return (
             <MenuItem 
@@ -90,51 +57,17 @@ const AddWorkLoad = (props) => {
         );
     });
 
-    const employeesList = employees.map((item) => {
-        return (
-            <MenuItem 
-                key={item.employee_id}
-                value={item.employee_id}>
-                {item.employee_name}
-            </MenuItem>
-        );
-    });
-
-    const showAlert = e => {
-        e.preventDefault();
-        if (isValid) {
-            alert.show(' Учебная нагрузка успешно добавлена!', 'success');
-            handleSubmit();
-        }   
-        if (!isValid) {
-            alert.show(' В форме обнаружены ошибки!', 'warning');
-        }
-    };
-
     return (
-        <Form onSubmit={showAlert} className="mt-2">
-            <Text> 
-                Выберите сотрудника
-            </Text>
-            <ContainerInfo className="mb-2">
-                <SelectField
-                    name="employee_id"    
-                    label="Сотрудник"
-                    labelId="employee-simple-select-helper-label"
-                    id="employee simple-select-helper"
-                    items={employeesList}
-                    />
+        <Form onSubmit={handleSubmit}>
+            <ContainerInfo>
                 <SelectField
                     name="discipline_id"    
-                    label="Дисциплина"
+                    label="Выберите дисциплину"
                     labelId="discipline-simple-select-helper-label"
                     id="discipline-simple-select-helper"
                     items={disciplinesList}
                 />
             </ContainerInfo>
-            <Text> 
-                Введите часы:
-            </Text>
             <ContainerHours>
                 <InputField
                     name="lectures"
@@ -176,36 +109,29 @@ const AddWorkLoad = (props) => {
                 type="submit" 
                 variant="contained" 
                 color="primary"
-                onSubmit={showAlert}>
+                onSubmit={handleSubmit}>
                 Подтвердить
             </Button>
         </Form>
     );
-};
+}
 
 const initialValues = {
     employee_id: '',
     discipline_id: '',
-    lectures: null,
-    seminar: null,
+    lectures: 4,
+    seminar: 7,
     diploma: null,
-    sets: null,
+    sets: 12,
     exams: null,
     consultations: null,
-    other: null,
+    other: 11,
 };
 
 const noMoreThanThreeDigit = "Максимум трёхзначное значение";
 const mustBeNumber = "Допустимы только цифры";
-const mustBeFilled = "Поле обязательно к заполнению";
 
 const validationSchema = yup.object().shape({
-    employee_id: yup
-        .string()
-        .required(mustBeFilled),
-    discipline_id: yup
-        .string()
-        .required(mustBeFilled),
     lectures: yup
         .number()
         .nullable()
@@ -243,24 +169,13 @@ const validationSchema = yup.object().shape({
         .max(999, noMoreThanThreeDigit),
 })
 
-const AddWorkLoadForm = withFormik({
+
+const PersonHoursForm = withFormik({
     mapPropsToValues: () => (initialValues),
     validationSchema,
-    handleSubmit: ({employee_id, discipline_id, lectures, seminar, diploma, sets, exams, consultations, other}) => {
-        EmployeeService
-            .insertDisciplineHours(
-                employee_id, 
-                discipline_id, 
-                lectures, 
-                seminar, 
-                diploma, 
-                sets, 
-                exams, 
-                consultations, 
-                other
-            );
+    handleSubmit: (personInfo) => {
+        console.log(personInfo)
     }
-})(AddWorkLoad);
+})(PersonHours);
 
-export default memo(AddWorkLoadForm);
-
+export default memo(PersonHoursForm);

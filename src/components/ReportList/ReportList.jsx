@@ -12,6 +12,8 @@ const Header = styled.div`
     }
 `;
 const Content = styled.div`
+    display: flex;
+    justify-content: space-between;
     border-bottom: 1px solid #c9c9c9;
     margin-bottom: 10px;
     > button {
@@ -31,8 +33,7 @@ const ReportList = () => {
     const [reportList, setReportList] = useState([]); 
 
     const deleteItem = (id) => {
-        const index = reportList.findIndex((item) => item.id === id);
-        console.log(index);
+        setReportList(reportList.filter(item => item.id !== id));
     };
 
     const createItem = () => {
@@ -71,11 +72,20 @@ const ReportList = () => {
                 <Button 
                     variant="contained" 
                     size="large" 
-                    color="primary"
                     style={{backgroundColor: '#4F9DDD'}}
+                    color="primary"
                     onClick={addItem}
                 >
                     + Добавить отчёт
+                </Button>
+                <Button 
+                    variant="contained" 
+                    size="large" 
+                    color="primary"
+                    style={{backgroundColor: '#4fdd81'}}
+                    onClick={() => {}}
+                >
+                   ↓ Скачать
                 </Button>
             </Content>
             {renderReportList()}

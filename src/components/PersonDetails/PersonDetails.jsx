@@ -18,12 +18,22 @@ import './PersonDetails.css';
 
 const Root = styled.div`
     padding: 0.25rem;
+    div {
+        button[type="submit"] {
+            background: rgb(79, 157, 221);
+        }
+    
+        button[type="submit"]:focus { 
+            outline: none; 
+        }
+    }
 `;
 
 const PersonImage = styled.img`
     width: 30%;
     height: 30%;
     border-radius: 10px;
+    margin: 0 auto;
 `;
 
 const positionArray = [
@@ -36,7 +46,7 @@ const positionArray = [
 
 const PersonDetailsLayout = (props) => {
     const { values, isValid, handleSubmit, setFieldValue } = props;
-
+    
     const menuItems = positionArray.map((item, i) => {
         if (item !== values.position) {
             return <MenuItem value={item} key={i}>{item}</MenuItem>

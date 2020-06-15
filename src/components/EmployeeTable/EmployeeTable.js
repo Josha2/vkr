@@ -1,27 +1,61 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import dateFormat from 'dateformat';
-import AddEmployee from '../../form-add-employee/form-add-employee';
+import AddEmployee from '../AddEmployee/AddEmployee';
 import ApiService from '../../service/ApiService';
 import AddWorkLoad from '../AddWorkLoad/AddWorkLoad';
 import Tabs from '../../tabs/tabs';
 import PrintTable from '../PrintTable/PrintTable';
 import PersonDetails from '../PersonDetails/PersonDetails.jsx';
 import ModalWindow from '../../common/components/ModalWindow';
+import EmployeeService from '../../service/ApiService';
 
 import edit from './edit.png';
+import questionMark from './questionMark.png';
+
+import PersonHours from '../PersonHours/PersonHours';
 
 const EmployeeTable = () =>  {
-    const [currentItem, setCurrentItem] = useState(null);
-    const [isModalOpen, setModal] = useState(false);
     const [setTotal] = useState(0);
+    const [currentItem, setCurrentItem] = useState({});
+    const [disciplines, setDisciplines] = useState([]);
+    // const [currentDiscipline, setCurrentDiscipline] = useState(null);
+    // const [hoursInfo, setHoursInfo] = useState([]);
+    const [isEditModalOpen, setEditModal] = useState(false);
+    const [isInfoModalOpen, setInfoModal] = useState(false);
 
-    const onShowModal = (item) => {
+    useEffect(() => {
+        const fetch = async () => {
+            const disciplines = await EmployeeService.getDiscipline(currentItem.employee_name);
+            setDisciplines(disciplines);
+        };
+
+        fetch();
+    }, [setDisciplines, currentItem.employee_name]);
+
+    // useEffect(() => {
+    //     const fetch = async () => {
+    //         const discipline = await EmployeeService.getDisciplineInfo(currentItem.employee_name, disciplines[0] && disciplines[0].discipline_id);
+    //         setHoursInfo(discipline ?? {});
+    //     };
+
+    //     fetch();
+    // }, [currentItem.employee_id, disciplines[0], setHoursInfo]);
+
+    // console.log(disciplines[0]);
+
+    const onShowModalEdit = (item) => {
         setCurrentItem(item);
-        setModal(true);
+        setEditModal(true);
+    };
+
+    const onShowModalInfo = (item) => {
+        setCurrentItem(item);
+        setInfoModal(true);
     };
     
     const onCloseModal = () => {
-        setModal(false);
+        setEditModal(false);
+        setInfoModal(false);
     };
 
     const employeeTable = (                
@@ -29,13 +63,16 @@ const EmployeeTable = () =>  {
             getData={ApiService.getEmployees}
             setTotal={setTotal} 
             headerTitles={[
-                'Изменить', 'Договор',
+                'Изменить', 'Информация', 'Договор',
                 'Дата начала договора', 'Дата конца договора',
                 'ФИО', 'Факультет', 'Должность']}>
                 {(item) => (
                     <>  
                     <td>
-                        <img src={edit} alt="" height="25"  width="25" onClick={() => onShowModal(item)}/>
+                        <img src={edit} alt="" height="25"  width="25" onClick={() => onShowModalEdit(item)}/>
+                    </td>
+                    <td>
+                        <img src={questionMark} alt="" height="25" width="25" onClick={() => onShowModalInfo(item)}/>
                     </td>
                     <td>{item.employee_number}</td>
                     <td>{dateFormat(item.employee_start, 'dd-mm-yyyy')}</td>
@@ -50,8 +87,20 @@ const EmployeeTable = () =>  {
 
         return (
             <>
-            <ModalWindow title="Изменить данные" isOpen={isModalOpen} onClose={onCloseModal} >
+            <ModalWindow 
+                title="Изменить данные" 
+                isOpen={isEditModalOpen} 
+                onClose={onCloseModal} >
                 <PersonDetails personInfo={currentItem ?? {}}/>
+            </ModalWindow>
+
+            <ModalWindow 
+                title="Информация по дисциплинам" 
+                isOpen={isInfoModalOpen} 
+                onClose={onCloseModal} >
+                <PersonHours 
+                    personInfo={currentItem ?? {}}
+                    disciplines={disciplines}/>
             </ModalWindow>
 
             <div className="container pt-2">

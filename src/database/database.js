@@ -11,7 +11,9 @@ const connection = mysql.createConnection({
     user: 'root',
     password: 'Menusourceauto123',
     database: 'uni',
-    dateStrings: 'date'
+    dateStrings: 'date',
+    charset: 'utf8_general_ci'
+
 });
 app.use(express.static('public'));
 app.use('/img', express.static('images'));
@@ -36,9 +38,27 @@ app.get('/employees', (req, res) => {
 })
 
 app.get('/employees/add', (req, res) => {
-    const { employee_name, employee_skill} = req.query;
-    const INSERT_EMPLOYEE = `INSERT INTO employees VALUES('${employee_name}', '${employee_skill}')`;
-    connection.query(INSERT_EMPLOYEE, (err, results ) => {
+    const { employee_name, 
+            employee_skill, 
+            employee_department, 
+            employee_start, 
+            employee_end, 
+            employee_number} = req.query;
+    const ADD_EMPLOYEE = `INSERT INTO employees 
+                         (employee_name, 
+                            employee_skill, 
+                            employee_department, 
+                            employee_start, 
+                            employee_end, 
+                            employee_number)
+                         VALUES(
+                            '${employee_name}', 
+                            '${employee_skill}',
+                            '${employee_department}',
+                            '${employee_start}',
+                            '${employee_end}',
+                            '${employee_number}')`;
+    connection.query(ADD_EMPLOYEE, (err, results ) => {
         if(err) {
             return res.send(err);
         }
@@ -71,7 +91,7 @@ app.get('/employees/discipline', (req, res) => {
 //SELECT ALL DISCIPLINES
 app.get('/disciplines', (req, res) => {
     const SELECT_All_DISCIPLINE = `SELECT *
-                                        FROM discipline`;
+                                    FROM discipline`;
     connection.query(SELECT_All_DISCIPLINE, (err, results ) => {
         if(err) {
             return res.send(err);
@@ -91,6 +111,23 @@ app.get('/employees/employee', (req, res) => {
                              FROM employees
                              WHERE employee_name = '${employee_name}'`;
     connection.query(SELECT_EMPLOYEE, (err, results ) => {
+        if(err) {
+            return res.send(err);
+        }
+        else {
+            return res.json({
+                data: results
+            })
+        }
+    })
+})
+
+app.get('/disciplines/discipline', (req, res) => {
+    const { discipline_id, } = req.query;
+    const SELECT_DISCIPLINE = `SELECT discipline_name
+                            FROM discipline
+                            WHERE discipline_id = ${discipline_id}`;
+    connection.query(SELECT_DISCIPLINE, (err, results ) => {
         if(err) {
             return res.send(err);
         }

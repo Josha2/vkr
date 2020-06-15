@@ -14,12 +14,14 @@ import {usePrevious} from '../../helpers/usePrevious';
 import ReportTable from '../ReportTable/ReportTable';
 import CreateDocument from '../../print-document/print-document';
 import dateFormat from 'dateformat';
+import LogMenu from '../../common/components/controls/LogMenu';
 
 const mapHoursToMultiplier = {
     'ассистент': 150,
-    'старший преподаватель': 300,
-    'доцент': 450,
-    'профессор': 600,
+    'научный сотрудник': 300,
+    'старший преподаватель': 450,
+    'доцент': 600,
+    'профессор': 750,
 };
 const CustomFormControl = styled(FormControl)`
     width: 350px;
@@ -36,13 +38,13 @@ const CustomLabel = styled(InputLabel)`
 const CustomDeleteIcon = styled(DeleteIcon)`
     color: rgba(79, 157, 221, 1);
     margin-left: 15px;
-    margin-top: 8px;
+    margin-top: 10.3px;
     cursor: pointer;
 `;
 
 const CustomDownloadIcon = styled(GetAppIcon)`
     color: rgba(79, 157, 221, 0.50);
-    margin-top: 12px;
+    margin-top: 12.4px;
     cursor: pointer;
 `;
 
@@ -60,6 +62,7 @@ const SelectInputs = styled.div`
 const ActionIcons = styled.div`
     display: flex;
     align-items: center;
+    margin-right: -50px;
 `;
 
 
@@ -69,8 +72,10 @@ const Report = (props) => {
     const [employees, setEmployees] = useState([]);
     const [currentEmployee, setCurrentEmployee]= useState({});
     const [disciplines, setDisciplines] = useState([]);
+    const [disciplineName, setDisciplineName] = useState('');
     const [currentDiscipline, setCurrentDiscipline] = useState(null);
     const [hoursInfo, setHoursInfo] = useState([]);
+    const [edit, setEdit] = useState(false);
     // eslint-disable-next-line
     const [print, readyToPrint] = useState(false);
     const { 
@@ -127,7 +132,6 @@ const Report = (props) => {
             </CustomFormControl>
         );
     };
-
     //-----------------------------------------------------------------------
     useEffect(() => {
         const fetch = async () => {
@@ -168,7 +172,7 @@ const Report = (props) => {
             </FormControl>
         );
     };
-    
+
     const previousEmployeeName = usePrevious(employee_name);
     useEffect(() => {
         if(employee_name !== previousEmployeeName) {
@@ -177,33 +181,42 @@ const Report = (props) => {
 
     }, [previousEmployeeName, employee_name]);
 
+    useEffect(() => {
+        const fetch = async () => {
+            const data = await EmployeeService.getDisciplineName(currentDiscipline)
+            setDisciplineName(data[0] && data[0].discipline_name);
+        };
+
+        fetch();
+    }, [setDisciplineName, currentDiscipline]);
+
     let arrayHours = hoursInfo.map(item => item.hours);
     const printDoc = useCallback(() => {
-        
-        if(hoursInfo.length === 0) {
-            return <CustomDownloadIcon fontSize="default" />
+        if(hoursInfo.length !== 0 && disciplineName !== undefined) {
+            return (
+                <>
+                    <CreateDocument 
+                        name={employee_name}
+                        position={employee_skill}
+                        contractNumber={employee_number}
+                        contractStart={dateFormat(employee_start, 'dd.mm.yyyy')}
+                        disciplineName={disciplineName}
+                        multiplier={mapHoursToMultiplier[employee_skill]}
+                        lecturesHours={arrayHours[0] ?? ''}
+                        seminarHours={arrayHours[1] ?? ''}
+                        diplomaHours={arrayHours[2] ?? ''}
+                        setsHours={arrayHours[3] ?? ''}
+                        examsHours={arrayHours[4] ?? ''}
+                        consultationHours={arrayHours[5] ?? ''}
+                        otherHours={arrayHours[6] ?? ''}
+                    /> 
+                </> 
+            );
         }
-        return (
-            <>
-                <CreateDocument 
-                    name={employee_name}
-                    position={employee_skill}
-                    contractNumber={employee_number}
-                    contractStart={dateFormat(employee_start, 'dd.mm.yyyy')}
-                    multiplier={mapHoursToMultiplier[employee_skill]}
-                    lecturesHours={arrayHours[0] ?? ''}
-                    seminarHours={arrayHours[1] ?? ''}
-                    diplomaHours={arrayHours[2] ?? ''}
-                    setsHours={arrayHours[3] ?? ''}
-                    examsHours={arrayHours[4] ?? ''}
-                    consultationHours={arrayHours[5] ?? ''}
-                    otherHours={arrayHours[6] ?? ''}
-                /> 
-            </> 
-        );
+        return <CustomDownloadIcon fontSize="default" />
         
-    }, [arrayHours, employee_name, employee_skill, employee_number, employee_start, hoursInfo.length]);
-
+    }, [arrayHours, employee_name, employee_skill, employee_number, employee_start, hoursInfo.length, disciplineName]);
+    
     return (
         <ExpansionPanel expanded={expanded === `panel${panelId}`} onChange={handleChange(`panel${panelId}`)}>
             <ExpansionPanelSummary
@@ -236,8 +249,12 @@ const Report = (props) => {
                             onFocus={(e) => e.stopPropagation()}
                             control={<CustomDeleteIcon fontSize="default" onClick={() => deleteItem(panelId)}/>}
                         />
+                        <FormControlLabel
+                            onClick={(e) => e.stopPropagation()}
+                            onFocus={(e) => e.stopPropagation()}
+                            control={<LogMenu setEdit={setEdit} edit={edit}/>}
+                        />
                     </ActionIcons>
-                    <p>{panelId}</p>
                 </FormContent>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
@@ -245,7 +262,8 @@ const Report = (props) => {
                     employee_id={employee_id ?? null}    
                     employee_skill={employee_skill ?? null}    
                     discipline_id={currentDiscipline ?? null}
-                    throwBackHoursInfo={setHoursInfo}    
+                    throwBackHoursInfo={setHoursInfo} 
+                    edit={edit}  
                 />
             </ExpansionPanelDetails>
         </ExpansionPanel>
