@@ -95,7 +95,7 @@ const EmployeeTable = () =>  {
             </ModalWindow>
 
             <ModalWindow 
-                title="Информация по дисциплинам" 
+                title="Дополнительные часы по дисциплинам" 
                 isOpen={isInfoModalOpen} 
                 onClose={onCloseModal} >
                 <PersonHours 

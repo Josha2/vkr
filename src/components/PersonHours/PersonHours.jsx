@@ -105,13 +105,15 @@ const PersonHours = (props) => {
                     variant="outlined"
                 />
             </ContainerHours>
-            <Button
-                type="submit" 
-                variant="contained" 
-                color="primary"
-                onSubmit={handleSubmit}>
-                Подтвердить
-            </Button>
+            <div className="d-flex justify-content-end">
+                <Button
+                    type="submit" 
+                    variant="contained" 
+                    color="primary"
+                    onSubmit={handleSubmit}>
+                    Подтвердить
+                </Button>
+            </div>
         </Form>
     );
 }

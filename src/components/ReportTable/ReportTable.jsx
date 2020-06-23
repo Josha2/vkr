@@ -106,11 +106,11 @@ const ReportTable = (props) => {
     const tableRows = useCallback(() => {
         return hoursInfo.map((item, i) => {
             let multiplier;
-            if (item.hours !== null){
-                multiplier = mapHoursToMultiplier[employee_skill]
+            if (item.hours === null && !edit){
+                multiplier = null;
+                item.hours = '';
             } else {
-                multiplier = ''
-                item.hours = ''
+                multiplier = mapHoursToMultiplier[employee_skill];
             }
             return (
                 <TableRow key={i}>
@@ -127,16 +127,16 @@ const ReportTable = (props) => {
             );
         });
     });
-
+    console.log(edit);
     const showTable = () => {
         return (
             <TableContainer component={Paper}>
                 <Table size="small" aria-label="a dense table" style={{minWidth : 450}}>
                     <TableHead>
                         <TableRow>
-                        <TableCell>Вид</TableCell>
-                        <TableCell align="right">Стоимость часа руб.</TableCell>
-                        <TableCell align="right">Кол-во часов ч.</TableCell>
+                            <TableCell>Вид</TableCell>
+                            <TableCell align="right">Стоимость часа руб.</TableCell>
+                            <TableCell align="right">Кол-во часов ч.</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
